@@ -1,0 +1,41 @@
+{
+  "authority_effect": "none",
+  "constraint_count": 293,
+  "constraints_sha256": "4a95a4d3f12badf5d39b05571db4058bf5ec313333732c0e6f658fff99c039e8",
+  "lifted_pins": {
+    "cryptography": {
+      "locked": "cryptography==46.0.5",
+      "reason": "pinned by this repository's pyproject.toml"
+    },
+    "jsonschema": {
+      "locked": "jsonschema==4.26.0",
+      "reason": "pinned by this repository's pyproject.toml"
+    },
+    "mem0ai": {
+      "locked": "mem0ai==1.0.5",
+      "reason": "replaced by the lane row pin mem0ai==2.2.1 (lock: 1.0.5)"
+    },
+    "posthog": {
+      "locked": "posthog==7.9.10",
+      "reason": "mem0ai 2.2.1 requires posthog>=7.14.0; the lock carries 7.9.10 (telemetry client only; MEM0_TELEMETRY=false)"
+    },
+    "rfc8785": {
+      "locked": null,
+      "reason": "pinned by this repository's pyproject.toml"
+    }
+  },
+  "memory": "mem0-explicit",
+  "row_pins": [
+    "mem0ai==2.2.1"
+  ],
+  "row_removals": {
+    "fastembed": {
+      "locked": "fastembed==0.6.0",
+      "reason": "present in the lock only via cognee; Mem0 2.2.1 enables BM25 hybrid retrieval whenever it imports, which the frozen base-package row forbids"
+    }
+  },
+  "source": "uv.lock of the frozen AMB checkout, exported with uv and installed as pip constraints",
+  "uv_lock_git_blob": "cbd392efbd2c81c8cebf493edd07fd160f39dcbd",
+  "uv_lock_sha256": "de4408d18088476169d62286e379417aac2bd52c97f1bdd868bf4f4a366bcad7",
+  "uv_version": "uv 0.8.17"
+}

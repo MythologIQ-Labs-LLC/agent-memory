@@ -1,0 +1,81 @@
+03c1d0f1d27da63034f0931121c858faba512383
+reference/amb_agent_memory_bridge.py blob 3d9ccb31587b55edf4ddb714d6e8ff41d5b03228: frozen
+reference/amb_mem0_explicit_bridge.py blob ce41b1f5766b99cb968b798be3ad6d37c3283228: frozen
+fixture beliefs.seed.json sha256 35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98: frozen
+fixture retrieval.cases.json sha256 09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c: frozen
+input_sha256 caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd: frozen
+case split      : {'structural': 25, 'active': 43, 'trivially-empty': 9}
+passes by type  : {'structural': 25, 'active': 43, 'trivially-empty': 9}
+total passes    : 77/77
+precision/recall: 1.00 / 1.00
+OK — port matches upstream's reference row.
+2026-10-28 17:58:54,479 [WARNING] Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2026-10-28 17:58:54,583 [WARNING] Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+
+Dataset: precisionmembench  Split: single-turn  Memory: agent-memory  Run: 
+agent-memory-6b3c154d6b50  Mode: retrieval
+
+Loading queries...
+  77 queries loaded
+Loading documents...
+  35 documents loaded
+Ingesting into agent-memory...
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/lane-inputs/amb-harness/src/memory_bench/cli.py:65 in run          │
+│                                                                              │
+│    62 │   │   typer.echo(f"Error: unknown split '{split}'. Available: {', '. │
+│    63 │   │   raise typer.Exit(1)                                            │
+│    64 │                                                                      │
+│ ❱  65 │   summary = EvalRunner(output_dir=output_dir).run(                   │
+│    66 │   │   dataset=ds,                                                    │
+│    67 │   │   split=split,                                                   │
+│    68 │   │   memory=get_memory_provider(memory),                            │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/lane-inputs/amb-harness/src/memory_bench/runner.py:396 in run      │
+│                                                                              │
+│   393 │   │   │   else:                                                      │
+│   394 │   │   │   │   console.print(f"[dim]Ingesting into {memory.name}...[/ │
+│   395 │   │   │   │   t0 = time.perf_counter()                               │
+│ ❱ 396 │   │   │   │   memory.ingest(documents)                               │
+│   397 │   │   │   │   ingestion_ms = (time.perf_counter() - t0) * 1000       │
+│   398 │   │   │   │   ingested_docs_count = len(documents)                   │
+│   399 │   │   │   │   avg = f" ({ingestion_ms / len(documents):.1f}ms/doc av │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/lane-wt/reference/amb_agent_memory_bridge.py:259 in ingest         │
+│                                                                              │
+│   256 │   │   │   │   grouped.setdefault(_scope(document.user_id), []).appen │
+│   257 │   │   │                                                              │
+│   258 │   │   │   for scope, scoped_documents in grouped.items():            │
+│ ❱ 259 │   │   │   │   with AgentMemory.open(                                 │
+│   260 │   │   │   │   │   root,                                              │
+│   261 │   │   │   │   │   tenant=_TENANT,                                    │
+│   262 │   │   │   │   │   actor_id=_ACTOR,                                   │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/lane-wt/reference/agentmem_ref/api/surface.py:691 in open          │
+│                                                                              │
+│    688 │   │   identity_path = root / STORE_PROFILE_FILE                     │
+│    689 │   │   identity = _read_store_identity(identity_path)                │
+│    690 │   │   if identity is not None:                                      │
+│ ❱  691 │   │   │   _check_store_identity(identity, tenant=tenant, scope=scop │
+│    692 │   │   │   profile = identity["profile"]                             │
+│    693 │   │   elif database.exists():                                       │
+│    694 │   │   │   if store_profile is not None:                             │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/lane-wt/reference/agentmem_ref/api/surface.py:421 in               │
+│ _check_store_identity                                                        │
+│                                                                              │
+│    418 │   if requested is not None and requested != record["profile"]:      │
+│    419 │   │   raise StoreIdentityError(f"store identity profile is {record[ │
+│    420 │   if record["profile"] == STORE_PROFILE_SINGLE_PROJECT and record[" │
+│ ❱  421 │   │   raise StoreIdentityError(                                     │
+│    422 │   │   │   "single-project store is bound to a different project; mu │
+│    423 │   │   │   f"requires a {STORE_PROFILE_SCOPE_DISTINCT!r} store"      │
+│    424 │   │   )                                                             │
+╰──────────────────────────────────────────────────────────────────────────────╯
+StoreIdentityError: single-project store is bound to a different project; 
+multi-project memory requires a 'scope_distinct_v1' store

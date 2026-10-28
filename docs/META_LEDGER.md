@@ -5516,3 +5516,32 @@ The register is unchanged. No baseline identity is claimed or published.
 - Authorizing the replay successor generations, the lane re-execution and the mesa refreeze.
 
 No Actions, merge, release, tag, register update or benchmark-score change is authorized.
+
+### Entry #131: SUBSTANTIATION — v7 integration candidate, pass 2 (#840 repair, independent review, regenerated evidence, lanes), not qualified for publication
+
+**Timestamp**: 2026-10-28
+**Phase**: SUBSTANTIATE
+**Author**: Integration engineer (implementation and local qualification evidence)
+**Risk Grade**: L3
+**Session**: v7 integration pass 2 on `integration/v7-786-836-reconciliation-no-ci`
+**Target**: `reports/validation/v7-integration/PASS-2.md`. The runtime-final commit is `9eb72391`, the declaration blob is `98110886`, and the lanes were executed at `6b3c154d`.
+
+**Content Hash**:
+SHA256(reports/validation/v7-integration/PASS-2.md) = bcfe4d07549d6b7937b59626941451f6597515e40584a2b2c02dbe0e97a34485
+
+**Previous Hash**: `3ba2feab518e632b8a3edf969b4145aac4dd034472f64c08c99ff6c625a2b386`
+**Chain Hash**:
+SHA256(content_hash + previous_hash) = 3547e2093a90214c2f9d65d211a485cd1e22014f0688877bba8434db2e923b66
+
+**Decision**: Record pass 2 of the integrated v7 candidate.
+
+- **#840 temporary staging.** The repair is carried, with preregistered fail-first tests (26 RED → GREEN). The host-activation guard was assessed and is not carried.
+- **Independent review.** It found no critical merge defect. Two pre-existing security findings were fixed: read-only facade identity, and a scope-eligible ownership fence.
+- **Security replays.** A scope-distinct successor generation was reviewed before execution and executed. Its first-execution token defect was superseded with a recorded reason. All five families verify on re-execution.
+- **#644 replays.** All five families were re-recorded and verify on re-execution.
+- **mesa-formal-v5.** Frozen, not executed.
+- **Declaration.** Requalified, with every acceptance kind resolved by test.
+- **Gauntlet.** Re-pinned and qualified.
+- **Lanes.** 8 of 9 rows executed and imported, all equal to v6, with the known Mem0 turn reorder.
+
+**Limits**: The AMB agent-memory control row is BLOCKED. The frozen bridge writes several user scopes into one root, which the default `single_project_v1` profile refuses; resolving this needs a lane or bridge decision. mesa-formal-v5 is unexecuted. The owner decisions listed in `PASS-2.md` §6 are open, and none is recorded here. No Actions, merge, release, tag, register update or benchmark-score change is authorized.

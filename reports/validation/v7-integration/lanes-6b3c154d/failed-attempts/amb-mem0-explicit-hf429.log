@@ -1,0 +1,420 @@
+03c1d0f1d27da63034f0931121c858faba512383
+reference/amb_agent_memory_bridge.py blob 3d9ccb31587b55edf4ddb714d6e8ff41d5b03228: frozen
+reference/amb_mem0_explicit_bridge.py blob ce41b1f5766b99cb968b798be3ad6d37c3283228: frozen
+fixture beliefs.seed.json sha256 35659b3b9a581b644fc6746e1b4e902c3e7b56c0973b546bf7b0816a69e3de98: frozen
+fixture retrieval.cases.json sha256 09e99f0852280538abe34b03570f65583fdb10df3c554b7150f0f665d5db709c: frozen
+input_sha256 caf5869bd3f393bd539a8cfc507743d5850f9d84b1bc6ee4be25556555a682dd: frozen
+case split      : {'structural': 25, 'active': 43, 'trivially-empty': 9}
+passes by type  : {'structural': 25, 'active': 43, 'trivially-empty': 9}
+total passes    : 77/77
+precision/recall: 1.00 / 1.00
+OK — port matches upstream's reference row.
+2026-10-28 18:00:41,722 [WARNING] Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2026-10-28 18:00:41,838 [WARNING] Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+
+Dataset: precisionmembench  Split: single-turn  Memory: mem0-explicit  Run: 
+mem0-explicit-6b3c154d6b50  Mode: retrieval
+
+Loading queries...
+  77 queries loaded
+Loading documents...
+  35 documents loaded
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/huggingface_hub/ut │
+│ ils/_http.py:403 in hf_raise_for_status                                      │
+│                                                                              │
+│   400 │   >         If request failed for a reason not listed above.         │
+│   401 │   """                                                                │
+│   402 │   try:                                                               │
+│ ❱ 403 │   │   response.raise_for_status()                                    │
+│   404 │   except HTTPError as e:                                             │
+│   405 │   │   error_code = response.headers.get("X-Error-Code")              │
+│   406 │   │   error_message = response.headers.get("X-Error-Message")        │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/requests/models.py │
+│ :1026 in raise_for_status                                                    │
+│                                                                              │
+│   1023 │   │   │   )                                                         │
+│   1024 │   │                                                                 │
+│   1025 │   │   if http_error_msg:                                            │
+│ ❱ 1026 │   │   │   raise HTTPError(http_error_msg, response=self)            │
+│   1027 │                                                                     │
+│   1028 │   def close(self):                                                  │
+│   1029 │   │   """Releases the connection back to the pool. Once this method │
+╰──────────────────────────────────────────────────────────────────────────────╯
+HTTPError: 429 Client Error: Too Many Requests for url: 
+https://huggingface.co/api/models/sentence-transformers/multi-qa-MiniLM-L6-cos-v
+1/xet-read-token/b207367332321f8e44f96e224ef15bc607f4dbf0
+
+The above exception was the direct cause of the following exception:
+
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/transformers/utils │
+│ /hub.py:479 in cached_files                                                  │
+│                                                                              │
+│    476 │   try:                                                              │
+│    477 │   │   if len(full_filenames) == 1:                                  │
+│    478 │   │   │   # This is slightly better for only 1 file                 │
+│ ❱  479 │   │   │   hf_hub_download(                                          │
+│    480 │   │   │   │   path_or_repo_id,                                      │
+│    481 │   │   │   │   filenames[0],                                         │
+│    482 │   │   │   │   subfolder=None if len(subfolder) == 0 else subfolder, │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/huggingface_hub/ut │
+│ ils/_validators.py:114 in _inner_fn                                          │
+│                                                                              │
+│   111 │   │   if check_use_auth_token:                                       │
+│   112 │   │   │   kwargs = smoothly_deprecate_use_auth_token(fn_name=fn.__na │
+│   113 │   │                                                                  │
+│ ❱ 114 │   │   return fn(*args, **kwargs)                                     │
+│   115 │                                                                      │
+│   116 │   return _inner_fn  # type: ignore                                   │
+│   117                                                                        │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/huggingface_hub/fi │
+│ le_download.py:1014 in hf_hub_download                                       │
+│                                                                              │
+│   1011 │   │   │   local_files_only=local_files_only,                        │
+│   1012 │   │   )                                                             │
+│   1013 │   else:                                                             │
+│ ❱ 1014 │   │   return _hf_hub_download_to_cache_dir(                         │
+│   1015 │   │   │   # Destination                                             │
+│   1016 │   │   │   cache_dir=cache_dir,                                      │
+│   1017 │   │   │   # File info                                               │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/huggingface_hub/fi │
+│ le_download.py:1175 in _hf_hub_download_to_cache_dir                         │
+│                                                                              │
+│   1172 │   # Local file doesn't exist or etag isn't a match => retrieve file │
+│   1173 │                                                                     │
+│   1174 │   with WeakFileLock(lock_path):                                     │
+│ ❱ 1175 │   │   _download_to_tmp_and_move(                                    │
+│   1176 │   │   │   incomplete_path=Path(blob_path + ".incomplete"),          │
+│   1177 │   │   │   destination_path=Path(blob_path),                         │
+│   1178 │   │   │   url_to_download=url_to_download,                          │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/huggingface_hub/fi │
+│ le_download.py:1727 in _download_to_tmp_and_move                             │
+│                                                                              │
+│   1724 │   │                                                                 │
+│   1725 │   │   if xet_file_data is not None and is_xet_available():          │
+│   1726 │   │   │   logger.debug("Xet Storage is enabled for this repo. Downl │
+│ ❱ 1727 │   │   │   xet_get(                                                  │
+│   1728 │   │   │   │   incomplete_path=incomplete_path,                      │
+│   1729 │   │   │   │   xet_file_data=xet_file_data,                          │
+│   1730 │   │   │   │   headers=headers,                                      │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/huggingface_hub/fi │
+│ le_download.py:598 in xet_get                                                │
+│                                                                              │
+│    595 │   │   │   'Try `pip install "huggingface_hub[hf_xet]"` or `pip inst │
+│    596 │   │   )                                                             │
+│    597 │                                                                     │
+│ ❱  598 │   connection_info = refresh_xet_connection_info(file_data=xet_file_ │
+│    599 │                                                                     │
+│    600 │   def token_refresher() -> Tuple[str, int]:                         │
+│    601 │   │   connection_info = refresh_xet_connection_info(file_data=xet_f │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/huggingface_hub/ut │
+│ ils/_validators.py:114 in _inner_fn                                          │
+│                                                                              │
+│   111 │   │   if check_use_auth_token:                                       │
+│   112 │   │   │   kwargs = smoothly_deprecate_use_auth_token(fn_name=fn.__na │
+│   113 │   │                                                                  │
+│ ❱ 114 │   │   return fn(*args, **kwargs)                                     │
+│   115 │                                                                      │
+│   116 │   return _inner_fn  # type: ignore                                   │
+│   117                                                                        │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/huggingface_hub/ut │
+│ ils/_xet.py:116 in refresh_xet_connection_info                               │
+│                                                                              │
+│   113 │   """                                                                │
+│   114 │   if file_data.refresh_route is None:                                │
+│   115 │   │   raise ValueError("The provided xet metadata does not contain a │
+│ ❱ 116 │   return _fetch_xet_connection_info_with_url(file_data.refresh_route │
+│   117                                                                        │
+│   118                                                                        │
+│   119 @validate_hf_hub_args                                                  │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/huggingface_hub/ut │
+│ ils/_validators.py:114 in _inner_fn                                          │
+│                                                                              │
+│   111 │   │   if check_use_auth_token:                                       │
+│   112 │   │   │   kwargs = smoothly_deprecate_use_auth_token(fn_name=fn.__na │
+│   113 │   │                                                                  │
+│ ❱ 114 │   │   return fn(*args, **kwargs)                                     │
+│   115 │                                                                      │
+│   116 │   return _inner_fn  # type: ignore                                   │
+│   117                                                                        │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/huggingface_hub/ut │
+│ ils/_xet.py:187 in _fetch_xet_connection_info_with_url                       │
+│                                                                              │
+│   184 │   │   │   If the Hub API response is improperly formatted.           │
+│   185 │   """                                                                │
+│   186 │   resp = get_session().get(headers=headers, url=url, params=params)  │
+│ ❱ 187 │   hf_raise_for_status(resp)                                          │
+│   188 │                                                                      │
+│   189 │   metadata = parse_xet_connection_info_from_headers(resp.headers)  # │
+│   190 │   if metadata is None:                                               │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/huggingface_hub/ut │
+│ ils/_http.py:476 in hf_raise_for_status                                      │
+│                                                                              │
+│   473 │   │                                                                  │
+│   474 │   │   # Convert `HTTPError` into a `HfHubHTTPError` to display reque │
+│   475 │   │   # as well (request id and/or server error message)             │
+│ ❱ 476 │   │   raise _format(HfHubHTTPError, str(e), response) from e         │
+│   477                                                                        │
+│   478                                                                        │
+│   479 def _format(error_type: Type[HfHubHTTPError], custom_message: str, res │
+╰──────────────────────────────────────────────────────────────────────────────╯
+HfHubHTTPError: 429 Client Error: Too Many Requests for url: 
+https://huggingface.co/api/models/sentence-transformers/multi-qa-MiniLM-L6-cos-v
+1/xet-read-token/b207367332321f8e44f96e224ef15bc607f4dbf0 (Request ID: 
+Root=1-6ae2384b-6c35965b6e96c2924c733b14;d50a19a8-99eb-4639-ac7a-cfd4befdf4be)
+
+We had to rate limit your IP (160.79.106.129). To continue using our service, 
+create a HF account or login to your existing account, and make sure you pass a 
+HF_TOKEN if you're using the API.
+
+The above exception was the direct cause of the following exception:
+
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/lane-inputs/amb-harness/src/memory_bench/cli.py:65 in run          │
+│                                                                              │
+│    62 │   │   typer.echo(f"Error: unknown split '{split}'. Available: {', '. │
+│    63 │   │   raise typer.Exit(1)                                            │
+│    64 │                                                                      │
+│ ❱  65 │   summary = EvalRunner(output_dir=output_dir).run(                   │
+│    66 │   │   dataset=ds,                                                    │
+│    67 │   │   split=split,                                                   │
+│    68 │   │   memory=get_memory_provider(memory),                            │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/lane-inputs/amb-harness/src/memory_bench/runner.py:153 in run      │
+│                                                                              │
+│   150 │   │   │   memory.set_extraction_labels(labels)                       │
+│   151 │   │   │   console.print(f"[dim]Extraction labels: {', '.join(l['key' │
+│   152 │   │                                                                  │
+│ ❱ 153 │   │   memory.prepare(store_dir, unit_ids=unit_ids, reset=not skip_in │
+│   154 │   │                                                                  │
+│   155 │   │   stored_contexts: dict[str, str] = {}                           │
+│   156 │   │   stored_answers: dict[str, str] = {}                            │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/lane-wt/reference/amb_mem0_explicit_bridge.py:208 in prepare       │
+│                                                                              │
+│   205 │   │   │   import mem0  # noqa: PLC0415  (lazy: Mem0 is optional for  │
+│   206 │   │   │                                                              │
+│   207 │   │   │   self._mem0_version = verify_mem0_version(mem0)             │
+│ ❱ 208 │   │   │   memory = mem0.Memory.from_config(frozen_mem0_config(self._ │
+│   209 │   │   │   memory.llm = _NoInferenceGuard()                           │
+│   210 │   │   │   self._memory = memory                                      │
+│   211 │   │   │   self._ingested = 0                                         │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/mem0/memory/main.p │
+│ y:737 in from_config                                                         │
+│                                                                              │
+│    734 │   │   except ValidationError as e:                                  │
+│    735 │   │   │   logger.error(f"Configuration validation error: {e}")      │
+│    736 │   │   │   raise                                                     │
+│ ❱  737 │   │   return cls(config)                                            │
+│    738 │                                                                     │
+│    739 │   def _should_use_agent_memory_extraction(self, messages, metadata) │
+│    740 │   │   """Determine whether to use agent memory extraction based on  │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/mem0/memory/main.p │
+│ y:491 in __init__                                                            │
+│                                                                              │
+│    488 │   def __init__(self, config: MemoryConfig = MemoryConfig()):        │
+│    489 │   │   self.config = config                                          │
+│    490 │   │                                                                 │
+│ ❱  491 │   │   self.embedding_model = EmbedderFactory.create(                │
+│    492 │   │   │   self.config.embedder.provider,                            │
+│    493 │   │   │   self.config.embedder.config,                              │
+│    494 │   │   │   self.config.vector_store.config,                          │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/mem0/utils/factory │
+│ .py:175 in create                                                            │
+│                                                                              │
+│   172 │   │   if class_type:                                                 │
+│   173 │   │   │   embedder_instance = load_class(class_type)                 │
+│   174 │   │   │   base_config = BaseEmbedderConfig(**config)                 │
+│ ❱ 175 │   │   │   return embedder_instance(base_config)                      │
+│   176 │   │   else:                                                          │
+│   177 │   │   │   raise ValueError(f"Unsupported Embedder provider: {provide │
+│   178                                                                        │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/mem0/embeddings/hu │
+│ ggingface.py:27 in __init__                                                  │
+│                                                                              │
+│   24 │   │   else:                                                           │
+│   25 │   │   │   self.config.model = self.config.model or "multi-qa-MiniLM-L │
+│   26 │   │   │                                                               │
+│ ❱ 27 │   │   │   self.model = SentenceTransformer(self.config.model, **self. │
+│   28 │   │   │                                                               │
+│   29 │   │   │   self.config.embedding_dims = self.config.embedding_dims or  │
+│   30                                                                         │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/sentence_transform │
+│ ers/SentenceTransformer.py:327 in __init__                                   │
+│                                                                              │
+│    324 │   │   │   │   )                                                     │
+│    325 │   │   │   │   == self._model_config["model_type"]                   │
+│    326 │   │   │   ):                                                        │
+│ ❱  327 │   │   │   │   modules, self.module_kwargs = self._load_sbert_model( │
+│    328 │   │   │   │   │   model_name_or_path,                               │
+│    329 │   │   │   │   │   token=token,                                      │
+│    330 │   │   │   │   │   cache_folder=cache_folder,                        │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/sentence_transform │
+│ ers/SentenceTransformer.py:2305 in _load_sbert_model                         │
+│                                                                              │
+│   2302 │   │   │   else:                                                     │
+│   2303 │   │   │   │   # Newer modules that support the new loading method a │
+│   2304 │   │   │   │   # i.e. with many keyword arguments that can optionall │
+│ ❱ 2305 │   │   │   │   module = module_class.load(                           │
+│   2306 │   │   │   │   │   model_name_or_path,                               │
+│   2307 │   │   │   │   │   # Loading-specific keyword arguments              │
+│   2308 │   │   │   │   │   subfolder=module_config["path"],                  │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/sentence_transform │
+│ ers/models/Transformer.py:366 in load                                        │
+│                                                                              │
+│   363 │   │   │   config_kwargs=config_kwargs,                               │
+│   364 │   │   │   backend=backend,                                           │
+│   365 │   │   )                                                              │
+│ ❱ 366 │   │   return cls(model_name_or_path=model_name_or_path, **init_kwarg │
+│   367 │                                                                      │
+│   368 │   @classmethod                                                       │
+│   369 │   def _load_init_kwargs(                                             │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/sentence_transform │
+│ ers/models/Transformer.py:89 in __init__                                     │
+│                                                                              │
+│    86 │   │   │   config_args = {}                                           │
+│    87 │   │                                                                  │
+│    88 │   │   config, is_peft_model = self._load_config(model_name_or_path,  │
+│ ❱  89 │   │   self._load_model(model_name_or_path, config, cache_dir, backen │
+│    90 │   │                                                                  │
+│    91 │   │   # Get the signature of the auto_model's forward method to pass │
+│    92 │   │   # plus some common values like "input_ids", "attention_mask",  │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/sentence_transform │
+│ ers/models/Transformer.py:197 in _load_model                                 │
+│                                                                              │
+│   194 │   │   │   elif isinstance(config, MT5Config):                        │
+│   195 │   │   │   │   self._load_mt5_model(model_name_or_path, config, cache │
+│   196 │   │   │   else:                                                      │
+│ ❱ 197 │   │   │   │   self.auto_model = AutoModel.from_pretrained(           │
+│   198 │   │   │   │   │   model_name_or_path, config=config, cache_dir=cache │
+│   199 │   │   │   │   )                                                      │
+│   200 │   │   elif backend == "onnx":                                        │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/transformers/model │
+│ s/auto/auto_factory.py:604 in from_pretrained                                │
+│                                                                              │
+│   601 │   │   │   model_class = _get_model_class(config, cls._model_mapping) │
+│   602 │   │   │   if model_class.config_class == config.sub_configs.get("tex │
+│   603 │   │   │   │   config = config.get_text_config()                      │
+│ ❱ 604 │   │   │   return model_class.from_pretrained(                        │
+│   605 │   │   │   │   pretrained_model_name_or_path, *model_args, config=con │
+│   606 │   │   │   )                                                          │
+│   607 │   │   raise ValueError(                                              │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/transformers/model │
+│ ing_utils.py:277 in _wrapper                                                 │
+│                                                                              │
+│    274 │   def _wrapper(*args, **kwargs):                                    │
+│    275 │   │   old_dtype = torch.get_default_dtype()                         │
+│    276 │   │   try:                                                          │
+│ ❱  277 │   │   │   return func(*args, **kwargs)                              │
+│    278 │   │   finally:                                                      │
+│    279 │   │   │   torch.set_default_dtype(old_dtype)                        │
+│    280                                                                       │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/transformers/model │
+│ ing_utils.py:4900 in from_pretrained                                         │
+│                                                                              │
+│   4897 │   │   │   │   "loaded from GGUF files."                             │
+│   4898 │   │   │   )                                                         │
+│   4899 │   │                                                                 │
+│ ❱ 4900 │   │   checkpoint_files, sharded_metadata = _get_resolved_checkpoint │
+│   4901 │   │   │   pretrained_model_name_or_path=pretrained_model_name_or_pa │
+│   4902 │   │   │   subfolder=subfolder,                                      │
+│   4903 │   │   │   variant=variant,                                          │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/transformers/model │
+│ ing_utils.py:1037 in _get_resolved_checkpoint_files                          │
+│                                                                              │
+│   1034 │   │   │   │   │   "_raise_exceptions_for_missing_entries": False,   │
+│   1035 │   │   │   │   │   "_commit_hash": commit_hash,                      │
+│   1036 │   │   │   │   }                                                     │
+│ ❱ 1037 │   │   │   │   resolved_archive_file = cached_file(pretrained_model_ │
+│   1038 │   │   │   │                                                         │
+│   1039 │   │   │   │   # Since we set _raise_exceptions_for_missing_entries= │
+│   1040 │   │   │   │   # result when internet is up, the repo and revision e │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/transformers/utils │
+│ /hub.py:322 in cached_file                                                   │
+│                                                                              │
+│    319 │   model_weights_file = cached_file("google-bert/bert-base-uncased", │
+│    320 │   ```                                                               │
+│    321 │   """                                                               │
+│ ❱  322 │   file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[f │
+│    323 │   file = file[0] if file is not None else file                      │
+│    324 │   return file                                                       │
+│    325                                                                       │
+│                                                                              │
+│ /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/s │
+│ cratchpad/bench/venv312-mem0/lib/python3.12/site-packages/transformers/utils │
+│ /hub.py:563 in cached_files                                                  │
+│                                                                              │
+│    560 │   │   elif isinstance(e, HTTPError) and not isinstance(e, EntryNotF │
+│    561 │   │   │   if not _raise_exceptions_for_connection_errors:           │
+│    562 │   │   │   │   return None                                           │
+│ ❱  563 │   │   │   raise OSError(f"There was a specific connection error whe │
+│    564 │   │   # Any other Exception type should now be re-raised, in order  │
+│    565 │   │   # (EntryNotFoundError will be treated outside this block and  │
+│    566 │   │   elif not isinstance(e, EntryNotFoundError):                   │
+╰──────────────────────────────────────────────────────────────────────────────╯
+OSError: There was a specific connection error when trying to load 
+sentence-transformers/multi-qa-MiniLM-L6-cos-v1:
+429 Client Error: Too Many Requests for url: 
+https://huggingface.co/api/models/sentence-transformers/multi-qa-MiniLM-L6-cos-v
+1/xet-read-token/b207367332321f8e44f96e224ef15bc607f4dbf0 (Request ID: 
+Root=1-6ae2384b-6c35965b6e96c2924c733b14;d50a19a8-99eb-4639-ac7a-cfd4befdf4be)
+
+We had to rate limit your IP (160.79.106.129). To continue using our service, 
+create a HF account or login to your existing account, and make sure you pass a 
+HF_TOKEN if you're using the API.

@@ -1,0 +1,76 @@
+Obtaining file:///tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/scratchpad/lane-wt
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting jsonschema==4.26.0 (from -r reference/requirements.txt (line 3))
+  Using cached jsonschema-4.26.0-py3-none-any.whl.metadata (7.6 kB)
+Collecting cryptography==50.0.2 (from -r reference/requirements.txt (line 4))
+  Using cached cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (4.4 kB)
+Collecting agent-manifest==0.12.0 (from -r reference/requirements.txt (line 5))
+  Using cached agent_manifest-0.12.0-py3-none-any.whl.metadata (9.2 kB)
+Collecting agentrust-trace==0.10.0 (from -r reference/requirements.txt (line 6))
+  Using cached agentrust_trace-0.10.0-py3-none-any.whl.metadata (11 kB)
+Collecting rfc8785==0.1.4 (from -r reference/requirements.txt (line 7))
+  Using cached rfc8785-0.1.4-py3-none-any.whl.metadata (3.4 kB)
+Collecting pyyaml==6.0.3 (from -r reference/requirements.txt (line 8))
+  Using cached pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting attrs>=22.2.0 (from jsonschema==4.26.0->-r reference/requirements.txt (line 3))
+  Using cached attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+Collecting jsonschema-specifications>=2023.03.6 (from jsonschema==4.26.0->-r reference/requirements.txt (line 3))
+  Using cached jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)
+Collecting referencing>=0.28.4 (from jsonschema==4.26.0->-r reference/requirements.txt (line 3))
+  Using cached referencing-0.37.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting rpds-py>=0.25.0 (from jsonschema==4.26.0->-r reference/requirements.txt (line 3))
+  Using cached rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.1 kB)
+Collecting cffi>=2.0.0 (from cryptography==50.0.2->-r reference/requirements.txt (line 4))
+  Using cached cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.5 kB)
+Collecting cbor2<7,>=5.6 (from agent-manifest==0.12.0->-r reference/requirements.txt (line 5))
+  Using cached cbor2-6.1.5-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+Collecting pydantic<3,>=2.7 (from agent-manifest==0.12.0->-r reference/requirements.txt (line 5))
+  Using cached pydantic-2.14.1-py3-none-any.whl.metadata (133 kB)
+Collecting rfc3986-validator>=0.1.1 (from agentrust-trace==0.10.0->-r reference/requirements.txt (line 6))
+  Using cached rfc3986_validator-0.1.1-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting annotated-types>=0.6.0 (from pydantic<3,>=2.7->agent-manifest==0.12.0->-r reference/requirements.txt (line 5))
+  Using cached annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.50.1 (from pydantic<3,>=2.7->agent-manifest==0.12.0->-r reference/requirements.txt (line 5))
+  Using cached pydantic_core-2.50.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.5 kB)
+Collecting typing-extensions>=4.16.0 (from pydantic<3,>=2.7->agent-manifest==0.12.0->-r reference/requirements.txt (line 5))
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.4 (from pydantic<3,>=2.7->agent-manifest==0.12.0->-r reference/requirements.txt (line 5))
+  Using cached typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+Collecting pycparser (from cffi>=2.0.0->cryptography==50.0.2->-r reference/requirements.txt (line 4))
+  Using cached pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+Using cached jsonschema-4.26.0-py3-none-any.whl (90 kB)
+Using cached cryptography-50.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.8 MB)
+Using cached rfc8785-0.1.4-py3-none-any.whl (9.2 kB)
+Using cached agent_manifest-0.12.0-py3-none-any.whl (158 kB)
+Using cached agentrust_trace-0.10.0-py3-none-any.whl (64 kB)
+Using cached pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+Using cached cbor2-6.1.5-cp312-cp312-manylinux_2_28_x86_64.whl (463 kB)
+Using cached pydantic-2.14.1-py3-none-any.whl (488 kB)
+Using cached pydantic_core-2.50.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.2 MB)
+Using cached annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Using cached attrs-26.1.0-py3-none-any.whl (67 kB)
+Using cached cffi-2.1.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (221 kB)
+Using cached jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+Using cached referencing-0.37.0-py3-none-any.whl (26 kB)
+Using cached rfc3986_validator-0.1.1-py2.py3-none-any.whl (4.2 kB)
+Using cached rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (371 kB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Using cached typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Using cached pycparser-3.12-py3-none-any.whl (62 kB)
+Building wheels for collected packages: agent-memory-reference
+  Building editable for agent-memory-reference (pyproject.toml): started
+  Building editable for agent-memory-reference (pyproject.toml): finished with status 'done'
+  Created wheel for agent-memory-reference: filename=agent_memory_reference-0.2.0-0.editable-py3-none-any.whl size=14902 sha256=22c3fe1fb27183b23ce6fd454ec36c483dcc9a7562c7c80852aad33dac6bdf8a
+  Stored in directory: /tmp/pip-ephem-wheel-cache-olr3jmc5/wheels/ec/2f/84/495b9c01b6133d809acc214cb9e3d1128576a26c8daea1f22f
+Successfully built agent-memory-reference
+Installing collected packages: typing-extensions, rpds-py, rfc8785, rfc3986-validator, pyyaml, pycparser, cbor2, attrs, annotated-types, typing-inspection, referencing, pydantic-core, cffi, pydantic, jsonschema-specifications, cryptography, jsonschema, agent-manifest, agentrust-trace, agent-memory-reference
+
+Successfully installed agent-manifest-0.12.0 agent-memory-reference-0.2.0 agentrust-trace-0.10.0 annotated-types-0.8.0 attrs-26.1.0 cbor2-6.1.5 cffi-2.1.1 cryptography-50.0.2 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 pycparser-3.12 pydantic-2.14.1 pydantic-core-2.50.1 pyyaml-6.0.3 referencing-0.37.0 rfc3986-validator-0.1.1 rfc8785-0.1.4 rpds-py-2026.9.1 typing-extensions-4.16.0 typing-inspection-0.4.4
+pip exit=0

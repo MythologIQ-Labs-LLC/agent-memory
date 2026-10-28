@@ -10,6 +10,8 @@ tenant-wide fixture, so the stop is the store profile, not a regression of the c
 from __future__ import annotations
 
 import json
+import os
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -54,6 +56,31 @@ class FrozenRunnerStoreProfileTests(unittest.TestCase):
     def test_a_single_project_644_case_is_unaffected_by_the_profile(self):
         case = _case(replay_runner, "committed-governed-transition-witness-v1", "T1-asserted-change-only")
         self.assertEqual(_run(replay_runner, case)["outcome"], "pass")
+
+
+class FrozenAmbBridgeProfileTests(unittest.TestCase):
+    """The frozen AMB lane bridge (reference/amb_agent_memory_bridge.py, lane-pinned blob 3d9ccb31) ingests every
+    user scope into one store root. On the integrated default single_project_v1 profile the second user's open is
+    refused, so the AMB agent-memory control row is BLOCKED at this revision
+    (reports/validation/v7-integration/lanes-6b3c154d/). The bridge's own tests use one user and never met it.
+    This pins the blocker: a fix is a lane/bridge decision (a scope_distinct_v1 bridge is a new lane version),
+    never a silent change."""
+
+    def test_two_user_ingest_through_the_frozen_bridge_is_refused_by_the_default_profile(self):
+        import amb_agent_memory_bridge as bridge
+        from agentmem_ref.api.surface import StoreIdentityError
+        from tests.test_same_harness_lanes_v5 import FakeDocument, _fake_amb_modules
+
+        modules, registry = _fake_amb_modules()
+        with mock.patch.dict(sys.modules, modules), mock.patch.dict(os.environ, {}), tempfile.TemporaryDirectory() as tmp:
+            os.environ.pop(bridge.CROSS_FACT_SIDECAR_ENV, None)
+            os.environ.pop(bridge.SIDECAR_ENV, None)
+            provider = bridge.install_amb_agent_memory_provider(Path(tmp), agent_memory_revision="6" * 40)()
+            provider.prepare(Path(tmp) / "store")
+            documents = [FakeDocument(id="doc:a", content="Alice's gateway is Oslo.", user_id="user:alice"),
+                         FakeDocument(id="doc:b", content="Bob's gateway is Turku.", user_id="user:bob")]
+            with self.assertRaises(StoreIdentityError):
+                provider.ingest(documents)
 
 
 if __name__ == "__main__":

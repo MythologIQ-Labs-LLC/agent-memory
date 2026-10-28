@@ -1,0 +1,2 @@
+Requirement already satisfied: greenlet>=1 in /tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/scratchpad/bench/venv312-mem0/lib/python3.12/site-packages (from sqlalchemy>=2.0.31->mem0ai==2.2.1) (3.3.2)
+{"mem0ai": "2.2.1", "fastembed_installed": false, "spacy_installed": false}

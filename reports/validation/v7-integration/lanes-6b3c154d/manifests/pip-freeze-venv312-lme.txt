@@ -1,0 +1,20 @@
+agent-manifest==0.12.0
+-e git+https://github.com/Knapp-Kevin/agent-memory@6b3c154d6b50388cf8456d3b06055d5426ced330#egg=agent_memory_reference&subdirectory=../../../../../tmp/claude-0/-home-user-agent-memory/df091f7c-0b03-5d12-806d-4c56a896fc2c/scratchpad/lane-wt
+agentrust-trace==0.10.0
+annotated-types==0.8.0
+attrs==26.1.0
+cbor2==6.1.5
+cffi==2.1.1
+cryptography==50.0.2
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+pycparser==3.12
+pydantic==2.14.1
+pydantic_core==2.50.1
+PyYAML==6.0.3
+referencing==0.37.0
+rfc3986-validator==0.1.1
+rfc8785==0.1.4
+rpds-py==2026.9.1
+typing-inspection==0.4.4
+typing_extensions==4.16.0
