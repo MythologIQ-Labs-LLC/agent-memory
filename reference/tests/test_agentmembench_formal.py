@@ -275,6 +275,7 @@ class JudgeTests(unittest.TestCase):
 V2_FREEZE = formal.FREEZE_DIR / "mesa-formal-v2-freeze.json"
 V3_FREEZE = formal.FREEZE_DIR / "mesa-formal-v3-freeze.json"
 V4_FREEZE = formal.FREEZE_DIR / "mesa-formal-v4-freeze.json"
+V5_FREEZE = formal.FREEZE_DIR / "mesa-formal-v5-freeze.json"
 # The runner at 7b041a7, which the v1 freeze binds and where v1 replays run (docs/69
 # "Determinism"). Hard-coded: CI checkouts are shallow, so the commit is not readable there.
 V1_RUNNER_SHA256 = "58b2fced97a82d762a3cb24325af31173248431837880cd9b19b0a70ae55540c"
@@ -542,11 +543,12 @@ class SuccessorFreezeV4Tests(unittest.TestCase):
         self.assertEqual(self.v4["agent_memory"]["ranking_policy_id"], observed["ranking_policy_id"])
         self.assertEqual(self.v4["agent_memory"]["ranking_policy_version"], self.v3["agent_memory"]["ranking_policy_version"])
         declaration = json.loads((REFERENCE.parent / "reports" / "runtime" / "baseline-v7-declaration.json").read_text())
-        self.assertIn({"kind": "formal_replay", "ref": "mesa-formal-v4"}, declaration["acceptance_evidence_required"])
         # Integration (#674 x #786): the one v7 declaration moves the envelope contract 1.6.0 -> 1.8.0
         # (owner-accepted) and the protected tree. v4 stays frozen at the security lineage's identity
-        # (contract 1.6.0, runtime tree eafa528f): its committed replay is evidence for that tree only,
-        # and the integrated tree needs a fresh, owner-authorized freeze before any formal replay.
+        # (contract 1.6.0, runtime tree eafa528f): its committed replay is evidence for that tree only.
+        # The declaration's formal_replay item is the unexecuted successor freeze mesa-formal-v5.
+        self.assertIn({"kind": "formal_replay", "ref": "mesa-formal-v5"}, declaration["acceptance_evidence_required"])
+        self.assertNotIn({"kind": "formal_replay", "ref": "mesa-formal-v4"}, declaration["acceptance_evidence_required"])
         self.assertEqual(declaration["identity_deltas"],
                          [{"identity_path": "identity.public_contract_version", "from": "1.6.0", "to": "1.8.0"}])
         self.assertEqual(self.v4["agent_memory"]["public_contract_version"], "1.6.0")
@@ -558,6 +560,46 @@ class SuccessorFreezeV4Tests(unittest.TestCase):
             self.assertEqual(self.v4["predictions"][key], self.v3["predictions"][key], key)
         self.assertIn("concurrency and latency are reported only", self.v4["predictions"]["P6"])
         self.assertIn("blocks v7 publication", self.v4["predictions"]["on_miss"])
+
+
+class SuccessorFreezeV5Tests(unittest.TestCase):
+    """v7 integration: mesa-formal-v5 supersedes the executed v4 for contract 1.8.0.
+
+    It differs from v4 only in the bound identity (runtime tree, public contract, the adapter's
+    contract text, the run id), the status and supersession records, and the prediction kind's
+    wording; every protocol field and every prediction value is v4's."""
+
+    IDENTITY_FIELDS = {"freeze_id", "supersedes", "owning_issue", "frozen_on", "status", "supersession", "refreeze", "run_id",
+                       "adapter", "agent_memory", "predictions"}
+
+    def setUp(self):
+        self.v4 = formal.load_freeze(V4_FREEZE)
+        self.v5 = formal.load_freeze(V5_FREEZE)
+
+    def test_supersedes_the_exact_v4_bytes_and_leaves_v4_untouched(self):
+        self.assertEqual(self.v5["supersedes"]["sha256"], hashlib.sha256(V4_FREEZE.read_bytes()).hexdigest())
+        self.assertEqual(self.v4["agent_memory"]["public_contract_version"], "1.6.0")
+
+    def test_only_the_bound_identity_changes(self):
+        for key in set(self.v4) | set(self.v5):
+            if key not in self.IDENTITY_FIELDS:
+                self.assertEqual(self.v5.get(key), self.v4.get(key), key)
+        adapter4 = {k: v for k, v in self.v4["adapter"].items() if k != "surface"}
+        adapter5 = {k: v for k, v in self.v5["adapter"].items() if k != "surface"}
+        self.assertEqual(adapter5, adapter4)
+        self.assertEqual(self.v5["adapter"]["surface"], self.v4["adapter"]["surface"].replace("contract 1.6.0", "contract 1.8.0"))
+        for key in set(self.v4["agent_memory"]) - {"runtime_tree", "public_contract_version"}:
+            self.assertEqual(self.v5["agent_memory"][key], self.v4["agent_memory"][key], key)
+        for key in set(self.v4["predictions"]) - {"kind"}:
+            self.assertEqual(self.v5["predictions"][key], self.v4["predictions"][key], key)
+
+    def test_binds_the_live_runner_and_the_integrated_identity(self):
+        observed = formal.observed_agent_memory_binding()
+        self.assertEqual(formal.sha256_file(Path(formal.__file__)), self.v5["runner"]["sha256"])
+        self.assertEqual(self.v5["agent_memory"]["public_contract_version"], observed["public_contract_version"])
+        self.assertEqual(self.v5["agent_memory"]["runtime_tree"], observed["runtime_tree"])
+        self.assertEqual(self.v5["run_id"], "agent_memory_formal_v5_s2027_9170")
+        self.assertFalse((formal.REPO_ROOT / "reports/benchmarks/agentmembench-mesa-formal" / f"{self.v5['run_id']}.json").exists())
 
 
 if __name__ == "__main__":

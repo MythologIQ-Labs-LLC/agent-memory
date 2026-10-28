@@ -1,0 +1,41 @@
+{
+  "acceptance": "NOT GRANTED: requires an independent reviewer's decision recorded in META_LEDGER",
+  "evidence_verified": true,
+  "replays": [
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "cross-scope-write-authority-denial-v5",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "deleted-lineage-generations-and-restart-v4",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "public-tombstone-redaction-and-observer-separation-v4",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "evidence-reference-authorization-v2",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    },
+    {
+      "problems": [],
+      "reexecuted": true,
+      "replay": "scope-safe-graph-discovery-v2",
+      "status": "VERIFIED",
+      "verdict": "PASS"
+    }
+  ]
+}

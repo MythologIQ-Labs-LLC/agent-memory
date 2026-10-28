@@ -160,19 +160,19 @@
     },
     {
       "kind": "security_replay",
-      "ref": "cross-scope-write-authority-denial-v3"
+      "ref": "cross-scope-write-authority-denial-v5"
     },
     {
       "kind": "security_replay",
-      "ref": "deleted-lineage-generations-and-restart-v3"
+      "ref": "deleted-lineage-generations-and-restart-v4"
     },
     {
       "kind": "security_replay",
-      "ref": "public-tombstone-redaction-and-observer-separation-v3"
+      "ref": "public-tombstone-redaction-and-observer-separation-v4"
     },
     {
       "kind": "security_replay",
-      "ref": "evidence-reference-authorization-v1"
+      "ref": "evidence-reference-authorization-v2"
     },
     {
       "kind": "security_replay",
@@ -180,7 +180,7 @@
     },
     {
       "kind": "formal_replay",
-      "ref": "mesa-formal-v4"
+      "ref": "mesa-formal-v5"
     },
     {
       "kind": "public_gauntlet",

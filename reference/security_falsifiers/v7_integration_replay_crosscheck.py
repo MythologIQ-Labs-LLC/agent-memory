@@ -64,9 +64,20 @@ def _row(kind, replay_id, run, module, evidence_root):
     return row
 
 
+# The #836 families whose committed evidence this harness cross-checks. They are fixed here because the
+# v7 declaration now names their scope-distinct successors (DSL/5), which this harness does not run.
+FAMILIES = {
+    "security_replay": ("cross-scope-write-authority-denial-v3", "deleted-lineage-generations-and-restart-v3",
+                        "public-tombstone-redaction-and-observer-separation-v3", "evidence-reference-authorization-v1",
+                        "scope-safe-graph-discovery-v2"),
+    "replay": ("typed-sufficiency-noninterference-and-negative-controls-v1",
+               "governed-persisted-typed-slot-sufficiency-admission-recheck-v1", "governed-admitted-typed-value-coherence-v1",
+               "committed-governed-transition-witness-v1", "same-slot-safety-counterevidence-and-immutable-stop-gate-v1"),
+}
+
+
 def _declared(kind: str) -> list[str]:
-    record = json.loads(DECLARATION.read_text(encoding="utf-8"))
-    return [item["ref"] for item in record["acceptance_evidence_required"] if item["kind"] == kind]
+    return list(FAMILIES[kind])
 
 
 def _committed_digest(evidence_root: Path, replay_id: str) -> str | None:
