@@ -11,8 +11,9 @@ envelope ``incompatible`` under ADR-030 (the measured cost recorded by the isola
 
 * ``STORE_OPEN_CONTRACT_VERSION`` versions store identity records, the profiles they
   name, and the open-time admission rules. It never changes an envelope's compatibility.
-* ``CONTRACT_VERSION`` stays ``1.6.0``; ``1.0.0``-``1.6.0`` envelopes remain ``current``
-  on every store this runtime opens.
+* ``CONTRACT_VERSION`` is independent of it: on the integrated v7 candidate it is ``1.8.0``
+  (#836, owner-accepted), and every ``1.0.0``-``1.8.0`` envelope remains ``current`` on every
+  store this runtime opens.
 
 Compatibility uses ADR-030's four states against this contract's own version. Anything
 other than ``current`` refuses the open: a host or a record from a newer store-open

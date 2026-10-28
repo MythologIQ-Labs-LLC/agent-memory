@@ -512,6 +512,19 @@ class AgentMemory:
     qualification, and PAMA decisions as direct callers of this module.
     """
 
+    # #786 review RF1: the host-bound identity is fixed when the handle is bound. Every binding
+    # check compares against these, so a caller holding the handle must not be able to re-bind it
+    # to another project's memory, or brick a single-project store with one write.
+    root = property(lambda self: self._root, doc="The store root this handle was bound to (read-only).")
+    tenant = property(lambda self: self._tenant, doc="Host-bound tenant (read-only).")
+    actor_id = property(lambda self: self._actor_id, doc="Host-bound principal (read-only).")
+    charter_version = property(lambda self: self._charter_version, doc="Host-bound charter version (read-only).")
+    scope = property(lambda self: self._scope, doc="Host-bound project scope (read-only).")
+    purpose = property(lambda self: self._purpose, doc="Host-bound purpose (read-only).")
+    task_ref = property(lambda self: self._task_ref, doc="Host-bound task identity (read-only).")
+    store_profile = property(lambda self: self._store_profile, doc="The store's identity profile (read-only).")
+    runtime = property(lambda self: self._runtime, doc="The runtime this handle was bound to (read-only).")
+
     def __init__(
         self,
         *,
@@ -528,22 +541,24 @@ class AgentMemory:
         recall_control: str = RECALL_CONTROL_DEFAULT,
         proposition_extractor: Any = None,
         task_ref: str = "",
-        store_profile: str = STORE_PROFILE_LEGACY,
+        store_profile: str,
     ) -> None:
+        # #786 review RF1: the profile is named by whoever binds the handle (``open`` decides it
+        # from the store); there is no silent legacy default that passes keys through unmapped.
         if store_profile not in (*STORE_PROFILES, STORE_PROFILE_LEGACY):
             raise ValueError(f"unknown store_profile {store_profile!r}")
-        self.store_profile = store_profile
+        self._store_profile = store_profile
         _check_task_ref(task_ref)
-        self.task_ref = task_ref
-        self.root = root
+        self._task_ref = task_ref
+        self._root = root
         self.config_path = config_path
         self.qualification_path = qualification_path
-        self.tenant = tenant
-        self.actor_id = actor_id
-        self.charter_version = charter_version
-        self.scope = scope
-        self.purpose = purpose
-        self.runtime = runtime
+        self._tenant = tenant
+        self._actor_id = actor_id
+        self._charter_version = charter_version
+        self._scope = scope
+        self._purpose = purpose
+        self._runtime = runtime
         self._closed = False
         self._serialization_lock = getattr(runtime, "serialization_lock", None) or threading.RLock()
         self._semantic = semantic or {"status": "disabled", "mode": SEMANTIC_RETRIEVAL_DEFAULT,

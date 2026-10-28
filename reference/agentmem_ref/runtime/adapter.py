@@ -419,7 +419,7 @@ class GovernedMemoryAdapter:
         head = self._current_fact_by_memory.get(proposal.target_reference)
         if head is None:
             # #786 ownership: a deleted owned id is re-created only by a principal that owned it.
-            owners = self._deleted_generation_owners(proposal.target_reference)
+            owners = self._deleted_generation_owners(proposal)
             if owners and proposal.actor_id not in owners:
                 return WRITE_TARGET_REFUSAL
             return None
@@ -440,7 +440,7 @@ class GovernedMemoryAdapter:
         current_uuid = self._current_fact_by_memory.get(proposal.target_reference)
         if current_uuid is not None:
             return (self._fact_scope.get(current_uuid) or {}).get(OWNER_SCOPE_KEY)
-        owners = self._deleted_generation_owners(proposal.target_reference)
+        owners = self._deleted_generation_owners(proposal)
         if owners:
             return proposal.actor_id  # write_target_refusal admitted only a prior owner
         if ownership == OWNERSHIP_CREATOR_PRINCIPAL:
@@ -449,13 +449,19 @@ class GovernedMemoryAdapter:
             return proposal.actor_id
         return None
 
-    def _deleted_generation_owners(self, memory_id: str) -> frozenset[str]:
+    def _deleted_generation_owners(self, proposal: policy.Proposal) -> frozenset[str]:
+        """Owners of the deleted generations of ``proposal``'s target that its writer is scope-eligible for.
+
+        #786 review RF2: a deleted generation outside the writer's scope is not consulted, so a
+        deleted owned id reads to another scope exactly as a never-written id (#777: a deleted
+        lineage is withheld), and that scope's re-creation is its own unowned generation."""
         if not self._tombstones:
             return frozenset()
         return frozenset(
             owner for uuid, bound in self._fact_memory.items()
-            if bound == memory_id and uuid in self._tombstones
+            if bound == proposal.target_reference and uuid in self._tombstones
             and (owner := (self._fact_scope.get(uuid) or {}).get(OWNER_SCOPE_KEY))
+            and self.fact_eligible_for_writer(uuid, proposal)
         )
 
     def lineage_owner(self, memory_id: str) -> str | None:

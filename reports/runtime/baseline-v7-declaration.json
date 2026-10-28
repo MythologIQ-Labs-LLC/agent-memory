@@ -14,11 +14,11 @@
     },
     {
       "path": "reference/agentmem_ref/api/store_contract.py",
-      "blob": "83274c78ac581c54bc4ecd54118e84e01946ed9b"
+      "blob": "c0192a654fdef6a95f3f73a5ca83559d51587a0c"
     },
     {
       "path": "reference/agentmem_ref/api/surface.py",
-      "blob": "ea9929dc786891c33e2bc077b6b075cdbc6e93ab"
+      "blob": "fbb840d9913bc2c5c0dc14a3a74b29b3c8922947"
     },
     {
       "path": "reference/agentmem_ref/evidence_sufficiency.py",
@@ -46,7 +46,7 @@
     },
     {
       "path": "reference/agentmem_ref/runtime/adapter.py",
-      "blob": "89f3f6d711a69bf151a1ef3929b6100ece0cb32a"
+      "blob": "0b552296fd3203c3d25d2c9420f69a6191a4171b"
     },
     {
       "path": "reference/agentmem_ref/runtime/checkpoint_transactions.py",

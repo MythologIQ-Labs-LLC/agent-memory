@@ -5,11 +5,19 @@ oracle claims to cover; the oracle must fail under every one marked ``must_detec
 Regressions outside the oracle's matched-control method are listed with the suite that
 covers them instead, and reported rather than counted as detections.
 
-v7 integration (#786 x #836): the integrated adapter is #836's, so three regressions name its
-equivalent defence instead of the security branch's helpers: writer eligibility is
-``fact_eligible_for_writer`` (was ``_proposal_scope_eligible``), the unavailable-target token is
-``WRITE_TARGET_REFUSAL`` (was ``_UNAVAILABLE_TARGET_REFUSALS``) and history visibility is
-``public_current_visible`` (was ``history_eligible``).
+v7 integration (#786 x #836): the integrated adapter is #836's, whose helpers differ, so three
+regressions are re-targeted. Only the first is an exact equivalent (independent review,
+finding 3):
+
+* writer eligibility, ``fact_eligible_for_writer`` (was ``_proposal_scope_eligible``): equivalent,
+  must-detect;
+* ``WRITE_TARGET_REFUSAL`` renamed (was ``_UNAVAILABLE_TARGET_REFUSALS``): a token rename only. #836's
+  composition hides receipt state (``before_state`` ``v0``) in ``governed_delete`` /
+  ``commit_proposal`` instead, and that hiding is not mutated here;
+* ``public_current_visible`` disabled (was ``history_eligible``): covers history only. The snapshot
+  half now lives in ``_visible_head`` / ``fact_eligible_in_context`` and is not mutated here.
+
+The last two stay not-must-detect. The notes name the suites that do cover the defences.
 
     PYTHONPATH=reference python reference/security_falsifiers/store_profile_oracle_v2_sensitivity.py
 """
@@ -70,12 +78,14 @@ REGRESSIONS = [
                                _create_refuses_existing_file(SQLiteConfiguredCompositionRuntime.create)), True, ""),
     ("unavailable-target composition reverted",
      lambda: mock.patch.object(adapter_module, "WRITE_TARGET_REFUSAL", "write_target_unavailable"),
-     False, "foreign and absent ids both refuse as fact_not_found either way; receipt state hiding is covered by "
-            "tests.test_786_runtime_identity_security"),
+     False, "token rename only (review finding 3); receipt-state hiding is covered by "
+            "tests.test_786_cross_scope_write_authority, tests.test_786_cross_scope_write_guard and "
+            "tests.test_786_procedural_ownership"),
     ("history eligibility disabled",
      lambda: mock.patch.object(GovernedMemoryAdapter, "public_current_visible", lambda self, m, c: True),
-     False, "scope-distinct keys already confine history to the caller's namespace; tenant-wide history isolation is "
-            "covered by tests.test_786_runtime_identity_security and tests.test_786_runtime_cross_scope_recall_regression"),
+     False, "history half only (review finding 3); scope-distinct keys already confine history to the caller's "
+            "namespace; tenant-wide history isolation is covered by tests.test_786_runtime_identity_security and "
+            "tests.test_786_runtime_cross_scope_recall_regression"),
 ]
 
 

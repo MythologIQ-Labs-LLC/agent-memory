@@ -305,8 +305,6 @@ class UnauthorizedAccessFailsClosedTests(unittest.TestCase):
         self.assertTrue(issubclass(StoreIdentityError, RuntimeRecoveryError))
 
 
-if __name__ == "__main__":
-    unittest.main()
 
 
 class FacadeIdentityBindingTests(unittest.TestCase):
@@ -361,20 +359,34 @@ class FacadeIdentityBindingTests(unittest.TestCase):
 
     def test_the_envelope_surface_keeps_w4_host_declaration(self):
         # The host submitting an envelope declares its scope (contract 1.8.0, replay W4): a complete
-        # re-declaration of the owner's scope commits at the envelope layer exactly as the owner would.
-        with tempfile.TemporaryDirectory() as temp:
-            with open_tenant_wide(temp, tenant=TENANT, actor_id="agent:a", scope=PROJECT) as owner:
-                self.assertTrue(owner.remember("memory:k", "owner value")["committed"])
-            with open_tenant_wide(temp, tenant=TENANT, actor_id="agent:a", scope=OTHER) as other:
-                envelope = other._proposal(target_reference="memory:k", operation="correction",
-                                           fact_text="host-declared value", current_strength="reinforced",
-                                           proposed_strength="reinforced")
-                envelope.update({"scope": PROJECT, "project_ref": PROJECT, "isolation_domain_refs": [TENANT, PROJECT],
-                                 "required_isolation_domain_refs": [TENANT, PROJECT]})
-                envelope["state_snapshot"] = other._state_snapshot("memory:k", envelope)
-                adapter = other.runtime.adapter
-                result = other.runtime.durable_runtime.run_governed_read(
-                    lambda: surface.commit(adapter, envelope, "host-declared value"))
-                self.assertEqual(result["compatibility"], contract.CURRENT)
-                self.assertNotEqual(result.get("refusal"), "target_unavailable", result)
-                self.assertNotEqual(result.get("refusal"), "fact_not_found", result)
+        # re-declaration of the owner's scope is judged at the envelope layer exactly as the owner's own
+        # envelope is (review finding 4: compared outcome for outcome, not only "not a target refusal").
+        def submit(as_scope):
+            with tempfile.TemporaryDirectory() as temp:
+                with open_tenant_wide(temp, tenant=TENANT, actor_id="agent:a", scope=PROJECT) as owner:
+                    self.assertTrue(owner.remember("memory:k", "owner value")["committed"])
+                with open_tenant_wide(temp, tenant=TENANT, actor_id="agent:a", scope=as_scope) as handle:
+                    envelope = handle._proposal(target_reference="memory:k", operation="correction",
+                                                fact_text="host-declared value", current_strength="reinforced",
+                                                proposed_strength="reinforced")
+                    envelope.update({"scope": PROJECT, "project_ref": PROJECT,
+                                     "isolation_domain_refs": [TENANT, PROJECT],
+                                     "required_isolation_domain_refs": [TENANT, PROJECT]})
+                    envelope["state_snapshot"] = handle._state_snapshot("memory:k", envelope)
+                    adapter = handle.runtime.adapter
+                    result = handle.runtime.durable_runtime.run_governed_read(
+                        lambda: surface.commit(adapter, envelope, "host-declared value"))
+                    receipt = result.get("receipt") or {}
+                    return {"compatibility": result["compatibility"], "committed": result.get("committed"),
+                            "outcome": result.get("outcome"), "refusal": result.get("refusal"),
+                            "selected_action": receipt.get("selected_action"),
+                            "before_state": receipt.get("before_state"), "after_state": receipt.get("after_state")}
+
+        declared, owners = submit(OTHER), submit(PROJECT)
+        self.assertEqual(declared["compatibility"], contract.CURRENT)
+        self.assertEqual(owners["before_state"], "v1")  # the owner's live head is visible, not a v0 refusal
+        self.assertEqual(declared, owners)
+
+
+if __name__ == "__main__":
+    unittest.main()
