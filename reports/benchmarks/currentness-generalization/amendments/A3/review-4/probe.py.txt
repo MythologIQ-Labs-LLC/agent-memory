@@ -1,0 +1,17 @@
+import sys, tempfile
+from pathlib import Path
+sys.path.insert(0, "reference"); sys.path.insert(0, "reference/security_falsifiers")
+import a3_regate_sensitivity as h
+P = [("no CRLF normalisation", 'data = path.read_bytes().replace(b"\\r\\n", b"\\n")', 'data = path.read_bytes()'),
+     ("lone CR also normalised", 'data = path.read_bytes().replace(b"\\r\\n", b"\\n")', 'data = path.read_bytes().replace(b"\\r\\n", b"\\n").replace(b"\\r", b"\\n")'),
+     ("hash-object --no-filters", "    blob = source_blob(source)", '    blob = subprocess.run(["git", "hash-object", "--no-filters", str(source)], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()'),
+     ("strip all CR", 'data = path.read_bytes().replace(b"\\r\\n", b"\\n")', 'data = path.read_bytes().replace(b"\\r", b"")'),
+     ("frozen path shadows only package", "        shadows = shadowing_artifacts(source)\n        if shadows:\n            raise SystemExit(f\"host files would shadow the frozen",
+      "        shadows = [s for s in shadowing_artifacts(source) if s.startswith('package')]\n        if shadows:\n            raise SystemExit(f\"host files would shadow the frozen"),
+     ("unchecked hash pyc ignored", '                findings.append(f"unchecked hash-based bytecode {cached.name}")\n', ""),
+]
+with tempfile.TemporaryDirectory() as d:
+    for i,(n,o,new) in enumerate(P,100):
+        assert h.SOURCE.count(o)==1, n
+        r=h._run(h._load(h.SOURCE.replace(o,new),Path(d),i))
+        print(("KILLED " if not r.wasSuccessful() else "SURVIVED"), n, len(r.failures), len(r.errors))

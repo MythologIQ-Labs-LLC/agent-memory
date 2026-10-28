@@ -103,6 +103,15 @@ MUTATIONS = [
     ("import from dynamic modules allowed",
      '        elif isinstance(node, ast.ImportFrom) and (node.module or "").split(".")[0] in _DYNAMIC_NAMES:',
      "        elif False:", True),
+    ("CRLF normalisation dropped", '    data = path.read_bytes().replace(b"\\r\\n", b"\\n")', "    data = path.read_bytes()", True),
+    ("lone CR also normalised", '    data = path.read_bytes().replace(b"\\r\\n", b"\\n")',
+     '    data = path.read_bytes().replace(b"\\r\\n", b"\\n").replace(b"\\r", b"\\n")', True),
+    ("every CR stripped", '    data = path.read_bytes().replace(b"\\r\\n", b"\\n")',
+     '    data = path.read_bytes().replace(b"\\r", b"")', True),
+    ("frozen path refuses only package shadows", "        shadows = shadowing_artifacts(source)\n        if shadows:\n"
+     '            raise SystemExit(f"host files would shadow the frozen',
+     '        shadows = [item for item in shadowing_artifacts(source) if item.startswith("package")]\n        if shadows:\n'
+     '            raise SystemExit(f"host files would shadow the frozen', True),
     # Equivalent by construction.
     ("global clause removed", "elif isinstance(node, (ast.Global, ast.Nonlocal)) and TEMPLATE_NAME in node.names:",
      "elif False:", False),

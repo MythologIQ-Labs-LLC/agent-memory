@@ -1,0 +1,33 @@
+import subprocess, sys, shutil, os
+from pathlib import Path
+S = Path(sys.argv[1]); R = S / "attackrepo"; CK = R / "scripts/check_generalization_corpus.py"
+FROZEN = subprocess.run(["git","cat-file","-p","745f789c01b7a542f906a9034ae63ebdd6776f7c"],cwd=R,capture_output=True,check=True).stdout
+AUDITED = subprocess.run(["git","cat-file","-p","7cb9535695dd5bc760831eba50aefd5622fc1fa5"],cwd=R,capture_output=True,check=True).stdout
+assert b"\r" not in FROZEN and b"\r" not in AUDITED
+def check(src, strict):
+    code = (f"import importlib.util as u, pathlib; s=u.spec_from_file_location('c', {str(CK)!r}); c=u.module_from_spec(s); s.loader.exec_module(c)\n"
+            f"c.ROOT=pathlib.Path({str(R)!r})\n"
+            f"try: print('ACCEPT', c.template_basis(pathlib.Path({str(src)!r}), require_frozen_blob={strict})[1])\nexcept SystemExit as e: print('refuse', str(e)[:140])")
+    return subprocess.run([sys.executable, "-I", "-c", code], capture_output=True, text=True).stdout.strip()
+base = S / "gen"; shutil.rmtree(base, ignore_errors=True)
+for label, data in (("frozen LF", FROZEN), ("frozen CRLF", FROZEN.replace(b"\n", b"\r\n")), ("audited LF", AUDITED), ("audited CRLF", AUDITED.replace(b"\n", b"\r\n")),
+                    ("frozen mixed CRLF", b"".join(l + (b"\r\n" if i % 3 else b"\n") for i, l in enumerate(FROZEN.split(b"\n")))[:-2 if FROZEN.endswith(b"\n") else None])):
+    d = base / label.replace(" ", "_"); d.mkdir(parents=True)
+    for f in ("run_cross_fact_currentness_report.py",):
+        shutil.copy(R / "reference" / f, d / f)
+    src = d / "run_semantic_route_ordering_report.py"; src.write_bytes(data)
+    print(label, "| no pyc:", check(src, False), "| strict:", check(src, True))
+    for mode, env in (("timestamp", {}), ("checked-hash(SOURCE_DATE_EPOCH)", {"SOURCE_DATE_EPOCH": "1"})):
+        shutil.rmtree(d / "__pycache__", ignore_errors=True)
+        if env: subprocess.run([sys.executable, "-m", "py_compile", str(src)], env={**os.environ, **env}, check=True)
+        else: subprocess.run([sys.executable, "-c", "import run_semantic_route_ordering_report"], cwd=d, check=True, env={**os.environ, "PYTHONPATH": str(R / "reference")})
+        print("   +", mode, "pyc:", check(src, False))
+    # cp -a the whole dir (pyc with old co_filename, preserved mtime)
+    shutil.rmtree(d / "__pycache__", ignore_errors=True)
+    subprocess.run([sys.executable, "-c", "import run_semantic_route_ordering_report"], cwd=d, check=True, env={**os.environ, "PYTHONPATH": str(R / "reference")})
+    moved = base / (label.replace(" ", "_") + "_moved"); subprocess.run(["cp", "-a", str(d), str(moved)], check=True)
+    print("   + cp -a moved dir with pyc:", check(moved / src.name, False))
+# CRLF code-object equivalence with the LF program
+for name, data in (("frozen", FROZEN), ("audited", AUDITED)):
+    a = compile(data, "x.py", "exec", dont_inherit=True); b = compile(data.replace(b"\n", b"\r\n"), "x.py", "exec", dont_inherit=True)
+    print(name, "CRLF compiles to equal code:", a == b)

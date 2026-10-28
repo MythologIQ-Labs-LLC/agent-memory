@@ -1,6 +1,6 @@
 # Amendment A3 (#732 G3b, #786): semantic template pin — re-gate record
 
-**Status:** under independent re-gate. A3 is not accepted until a review of an exact revision returns PASS.
+**Status: re-gate PASS.** Independent review 3 passed `98a84041`, with advisories. Review 4 confirmed the advisory fixes and passed `a2014386`, checker blob `e2967b54`. The checker is unchanged after that commit; later commits add tests, harness mutations and evidence only. Recording the gate in `docs/META_LEDGER.md` is the governed next step. A3 governs only the G3b template basis: it is not a measurement and not benchmark acceptance.
 
 ## What A3 is
 
@@ -19,6 +19,7 @@
 
 - The frozen path and strict mode compare the **full** frozen blob, not the 32-bit prefix `745f789c`. A prefix collision with an altered template was demonstrated in review 1 (A4), and the gate-frozen checker would have accepted it. The genuine frozen bytes are classified exactly as before; replays on every recorded input are byte-identical.
 - The frozen path also checks the recorded template-text digest, and refuses host shadowing, including in strict mode.
+- A hash-based `.pyc` whose hash does not match the source is refused on both paths. 76a9e30 accepted a stale one on the frozen path (review 4, A4-2); this fails closed.
 - The blob is computed from the file's bytes, with CRLF normalised to LF. It no longer comes from `git hash-object`, whose clean filters host configuration can supply (review 3, R3-1).
 
 ## Evidence
@@ -34,7 +35,7 @@
 - **`review-1/`** — independent review of `0173adf7`: **VETO** (B1–B3), with fixes.
 - **`review-2/`** — independent review of `656bbe4d`: **VETO** (N1), with the structural fix.
 - **`review-3/`** — independent review of `98a84041`: **PASS, with advisories** R3-1 to R3-3. All are fixed in the next commit.
-- **`review-4/`** — independent confirmation of that delta.
+- **`review-4/`** — independent confirmation of that delta at `a2014386`: **PASS**. Its advisory test gaps are closed by later tests.
 
 ## Stated limits
 

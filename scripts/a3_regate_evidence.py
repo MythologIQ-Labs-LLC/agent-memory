@@ -160,7 +160,7 @@ def historical_replay(work: Path) -> dict:
     tree = work / "frozen-checker"
     subprocess.run(["git", "worktree", "add", "-q", "--detach", str(tree), FROZEN_CHECKER_REVISION], cwd=ROOT, check=True)
     try:
-        if git("hash-object", TEMPLATE_SOURCE, cwd=tree) != FROZEN_BLOB:
+        if git("hash-object", "--no-filters", TEMPLATE_SOURCE, cwd=tree) != FROZEN_BLOB:
             raise SystemExit("the gate-frozen worktree does not hold the frozen template blob")
         head_checker_in_frozen_tree = tree / "scripts" / "check_generalization_corpus_head.py"
         head_checker_in_frozen_tree.write_text((ROOT / CHECKER).read_text(encoding="utf-8"), encoding="utf-8")
@@ -252,7 +252,7 @@ def _audit(head_source: str) -> dict:
     sys.path.insert(0, str(ROOT / "scripts"))
     import check_generalization_corpus as checker  # the audited checker, for its recorded constants
 
-    blob = git("hash-object", TEMPLATE_SOURCE)
+    blob = git("hash-object", "--no-filters", TEMPLATE_SOURCE)
     return {
         "template_source_blob_audited": blob in checker.AUDITED_TEMPLATE_SOURCE_BLOBS,
         "audited_template_source_blobs": checker.AUDITED_TEMPLATE_SOURCE_BLOBS,
@@ -300,9 +300,9 @@ def main(argv: list[str] | None = None) -> int:
             "head": git("rev-parse", "HEAD"),
             "tree": git("rev-parse", "HEAD^{tree}"),
             "worktree_clean_for_inputs": dirty == "",
-            "checker_blob": git("hash-object", CHECKER),
-            "template_source_blob": git("hash-object", TEMPLATE_SOURCE),
-            "a3_tests_blob": git("hash-object", A3_TESTS),
+            "checker_blob": git("hash-object", "--no-filters", CHECKER),
+            "template_source_blob": git("hash-object", "--no-filters", TEMPLATE_SOURCE),
+            "a3_tests_blob": git("hash-object", "--no-filters", A3_TESTS),
             "frozen_template_blob": FROZEN_BLOB,
             "python": sys.version.split()[0],
         },

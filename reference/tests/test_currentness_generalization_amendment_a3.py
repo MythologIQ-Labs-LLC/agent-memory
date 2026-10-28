@@ -6,6 +6,7 @@ comparison are provably unchanged. These tests show what A3 refuses.
 """
 from __future__ import annotations
 
+import ast
 import importlib.util
 import subprocess
 import tempfile
@@ -391,6 +392,48 @@ class AmendmentA3Tests(unittest.TestCase):
                               ("dotted dynamic module from", "\nfrom ctypes.util import find_library\n")):
             with self.subTest(label), self.assertRaisesRegex(SystemExit, "CONFLICT_TEMPLATES is rebound"):
                 checker.template_basis(self.variant(self.source + suffix))
+
+    def test_review_4_line_endings_at_the_template_level(self):
+        # CRLF is the one normalisation; a lone CR is a Python newline, so it must never be stripped
+        # or folded: a CR inside a comment would turn the rest of that comment into code.
+        def written(data: bytes) -> Path:
+            path = Path(tempfile.mkdtemp(dir=self.temp.name)) / "run_semantic_route_ordering_report.py"
+            path.write_bytes(data)
+            return path
+
+        frozen = self.frozen.encode("utf-8")
+        self.assertEqual(checker.template_basis(written(frozen.replace(b"\n", b"\r\n")))[1], "frozen_blob")
+        self.assertEqual(checker.template_basis(written(self.source.encode("utf-8").replace(b"\n", b"\r\n")))[1],
+                         checker.TEMPLATE_AMENDMENT_ID)
+        comment = frozen.index(b"#")
+        # A lone CR is a newline to Python. A leading CR parses (a blank first line), so only the blob
+        # rule refuses it; the other two cases also change how the file parses.
+        cases = {"lone CR before the first line": b"\r" + frozen,
+                 "lone CR in place of LF": frozen.replace(b"\n", b"\r", 1),
+                 "extra CR inside a comment": frozen[:comment + 1] + b"\r" + frozen[comment + 1:]}
+        ast.parse((b"\r" + frozen).decode("utf-8"))
+        for label, data in cases.items():
+            for strict in (False, True):
+                with self.subTest(label, strict=strict), self.assertRaises(SystemExit):
+                    checker.template_basis(written(data), require_frozen_blob=strict)
+
+    def test_review_4_frozen_path_refuses_sibling_and_bytecode_shadows(self):
+        import py_compile
+        import sys
+
+        directory = Path(tempfile.mkdtemp(dir=self.temp.name))
+        path = directory / "run_semantic_route_ordering_report.py"
+        path.write_text(self.frozen, encoding="utf-8")
+        path.with_name(f"{path.stem}.cpython-312-x86_64-linux-gnu.so").write_bytes(b"\x7fELF")
+        with self.assertRaisesRegex(SystemExit, "would shadow the frozen.*sibling"):
+            checker.template_basis(path)
+        path.with_name(f"{path.stem}.cpython-312-x86_64-linux-gnu.so").unlink()
+        cache = directory / "__pycache__" / f"{path.stem}.{sys.implementation.cache_tag}.pyc"
+        py_compile.compile(str(path), cfile=str(cache), doraise=True,
+                           invalidation_mode=py_compile.PycInvalidationMode.UNCHECKED_HASH)
+        for strict in (False, True):
+            with self.subTest(strict=strict), self.assertRaisesRegex(SystemExit, "would shadow the frozen.*unchecked"):
+                checker.template_basis(path, require_frozen_blob=strict)
 
     def test_frozen_path_checks_the_recorded_texts(self):
         with mock.patch.object(checker, "TEMPLATE_TEXTS_SHA256", "0" * 64):
