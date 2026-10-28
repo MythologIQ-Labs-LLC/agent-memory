@@ -1,10 +1,10 @@
-"""AM B scope-distinct bridge successor: real public-facade boundary tests.
+"""AMB scope-distinct bridge successor: real public-facade boundary tests.
 
 The frozen 0.4.0 bridge and v7 lane are not changed. These controls challenge the
 new 0.5.0 adapter with two AMB users against one real SQLite root; they do not
 constitute benchmark score or lane acceptance. Run from repository root with:
-python3.12 -m unittest reference.tests.test_amb_scope_distinct_bridge -v
-or through the repository's reference/ discovery convention.
+python3.12 -m unittest discover -s reference/tests -t reference \
+    -p "test_amb_scope_distinct_*.py" -v
 """
 from __future__ import annotations
 
