@@ -24,7 +24,10 @@ def _importer():
 
 
 def _lane(lane_id):
-    return json.loads((LANES / (lane_id + ".json")).read_text(encoding="utf-8"))
+    path = (ROOT / "reports/validation/v7-integration/amb-scope-distinct-successor" / (lane_id + ".json")
+            if lane_id == "amb-precisionmembench-retrieval-v7-scope-distinct-v1"
+            else LANES / (lane_id + ".json"))
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 class ScopeDistinctAmbImporterTests(unittest.TestCase):
