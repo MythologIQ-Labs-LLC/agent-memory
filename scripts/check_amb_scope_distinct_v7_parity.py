@@ -154,6 +154,28 @@ def verify(baseline_dir: Path, candidate_dir: Path, *, root: Path = ROOT) -> dic
     _require(before_evidence.get("authority_effect") == "none", "baseline evidence authority mismatch")
     before_identity = _read_json(baseline_dir / "execution-identity.json")
     after_identity = _read_json(candidate_dir / "execution-identity.json")
+    # Compare *imported* evidence, not an unverified raw benchmark directory.
+    # This proves the official importer carried each result byte in its inventory.
+    candidate_evidence = _read_json(candidate_dir / "evidence.json")
+    _require(candidate_evidence.get("lane_id") == NEW_LANE_ID
+             and candidate_evidence.get("authority_effect") == "none"
+             and candidate_evidence.get("row", {}).get("row_id") == "agent-memory-public-facade"
+             and candidate_evidence.get("row", {}).get("provider_key") == "agent-memory",
+             "candidate has no imported Agent Memory control evidence")
+    _require(candidate_evidence.get("lane_digest_at_execution") == _lane_digest(lane),
+             "candidate importer recorded a different frozen lane digest")
+    candidate_files = candidate_evidence.get("files")
+    _require(isinstance(candidate_files, dict), "candidate importer file digest map is missing")
+    for name in ("single-turn.json", "cross-fact.jsonl", "execution-identity.json"):
+        _require(candidate_files.get(name) == _sha(candidate_dir / name),
+                 f"candidate {name} differs from the importer artifact digest")
+    candidate_cross_fact = candidate_evidence.get("cross_fact_sidecar")
+    _require(isinstance(candidate_cross_fact, dict)
+             and candidate_cross_fact.get("sha256") == candidate_files["cross-fact.jsonl"]
+             and candidate_cross_fact.get("records") == 73
+             and candidate_cross_fact.get("limited_total") == 0
+             and candidate_cross_fact.get("no_recall_executed_cases") == 4,
+             "candidate cross-fact evidence summary missing or inconsistent")
     recorded_files = before_evidence.get("files")
     _require(isinstance(recorded_files, dict), "accepted-v6 file digest map missing")
     for name in ("single-turn.json", "cross-fact.jsonl", "execution-identity.json"):
@@ -190,6 +212,10 @@ def verify(baseline_dir: Path, candidate_dir: Path, *, root: Path = ROOT) -> dic
     _require(after_identity.get("bridge_blobs") == {
         source: blob for source, blob in blobs.items() if source.startswith("reference/")
     }, "successor bridge or runner identity differs from the freeze")
+    _require(candidate_evidence.get("execution", {}).get("lane_id") == NEW_LANE_ID
+             and str(candidate_evidence.get("workflow_run", {}).get("id"))
+                 == str(after_identity["workflow_run_id"]),
+             "candidate importer and run identity disagree")
 
     before = _cases(_read_json(baseline_dir / "single-turn.json"), "v6")
     after = _cases(_read_json(candidate_dir / "single-turn.json"), "successor")
