@@ -144,6 +144,46 @@ class ImportAmbLaneEvidenceTests(unittest.TestCase):
                 self.assertTrue((destination / name).is_file(), name)
             self.assertEqual(record["files"]["single-turn.json"], _sha((destination / "single-turn.json").read_bytes()))
 
+    def test_second_import_at_same_commit_refuses_and_preserves_all_evidence_bytes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            runs = Path(temporary) / "runs"
+            out = Path(temporary) / "out"
+            _write_artifact(runs, "201", "bm25", "a" * 40, results=_results(4))
+            args = ["--runs-dir", str(runs), "--output-root", str(out), "--no-fetch", "--lane-at-head"]
+            self.module.main(args)
+            dest = out / "amb-precisionmembench-retrieval-v1" / f"bm25-{'a' * 12}"
+            original = {p.name: p.read_bytes() for p in dest.iterdir() if p.is_file()}
+            with self.assertRaisesRegex(self.module.ImportError_, "already exists"):
+                self.module.main(args)
+            self.assertEqual({p.name: p.read_bytes() for p in dest.iterdir() if p.is_file()}, original)
+            self.assertEqual([p.name for p in dest.parent.iterdir()], [dest.name])
+
+    def test_preexisting_empty_destination_is_never_replaced(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            runs = Path(temporary) / "runs"
+            out = Path(temporary) / "out"
+            _write_artifact(runs, "202", "bm25", "a" * 40, results=_results(4))
+            dest = out / "amb-precisionmembench-retrieval-v1" / f"bm25-{'a' * 12}"
+            dest.mkdir(parents=True)
+            with self.assertRaisesRegex(self.module.ImportError_, "already exists"):
+                self.module.main(["--runs-dir", str(runs), "--output-root", str(out), "--no-fetch", "--lane-at-head"])
+            self.assertTrue(dest.is_dir())
+            self.assertEqual(list(dest.iterdir()), [])
+            self.assertEqual([p.name for p in dest.parent.iterdir()], [dest.name])
+
+    def test_late_inventory_failure_cleans_stage_without_publishing_partial_evidence(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            runs = Path(temporary) / "runs"
+            out = Path(temporary) / "out"
+            artifact = _write_artifact(runs, "203", "bm25", "a" * 40, results=_results(4))
+            summary = next(artifact.glob("precisionmembench/*/retrieval/single-turn.json"))
+            summary.write_bytes(summary.read_bytes() + b" ")
+            dest = out / "amb-precisionmembench-retrieval-v1" / f"bm25-{'a' * 12}"
+            with self.assertRaisesRegex(self.module.ImportError_, "copied digest"):
+                self.module.main(["--runs-dir", str(runs), "--output-root", str(out), "--no-fetch", "--lane-at-head"])
+            self.assertFalse(dest.exists())
+            self.assertEqual(list(dest.parent.iterdir()), [])
+
     def test_agent_memory_row_binds_the_executing_repository_revision(self):
         with tempfile.TemporaryDirectory() as temporary:
             runs = Path(temporary) / "runs"
