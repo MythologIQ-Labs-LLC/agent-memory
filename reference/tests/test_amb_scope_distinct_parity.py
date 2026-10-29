@@ -296,6 +296,32 @@ class ScopeDistinctParitySensitivityTests(unittest.TestCase):
         with self.assertRaisesRegex(self.module.ParityBlocked, "no imported Agent Memory control evidence"):
             self.check()
 
+    def test_candidate_imported_execution_must_match_workflow_run(self):
+        p = self.candidate / "evidence.json"
+        manifest = json.loads(p.read_text(encoding="utf-8"))
+        manifest["workflow_run"]["id"] = "54321"
+        write_json(p, manifest)
+        with self.assertRaisesRegex(self.module.ParityBlocked, "importer and run identity disagree"):
+            self.check()
+
+    def test_candidate_imported_lane_digest_must_match_freeze(self):
+        p = self.candidate / "evidence.json"
+        manifest = json.loads(p.read_text(encoding="utf-8"))
+        manifest["lane_digest_at_execution"] = "0" * 64
+        write_json(p, manifest)
+        with self.assertRaisesRegex(self.module.ParityBlocked, "different frozen lane digest"):
+            self.check()
+
+    def test_malformed_importer_row_and_workflow_refuse(self):
+        p = self.candidate / "evidence.json"
+        for corruption in ({"row": None}, {"workflow_run": None}):
+            manifest = json.loads(p.read_text(encoding="utf-8"))
+            manifest.update(corruption)
+            write_json(p, manifest)
+            with self.subTest(corruption=corruption), self.assertRaises(self.module.ParityBlocked):
+                self.check()
+            self.write_candidate_evidence()
+
     def test_candidate_manifest_recomputed_but_different_sidecar_refuses(self):
         changed = copy.deepcopy(self.sidecar)
         changed[12]["returned_document_ids"] = ["other-user-document"]
