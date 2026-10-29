@@ -70,6 +70,7 @@ class ScopeDistinctParitySensitivityTests(unittest.TestCase):
             self.cases.append({
                 "query_id": f"question:{i}", "query": query, "correct": bool(query),
                 "context": f"belief:{i}" if query else "", "meta": meta,
+                "gold_answers": [f"belief:{i}"], "retrieve_time_ms": 10.0 + i,
             })
             if query:
                 self.sidecar.append({
@@ -84,8 +85,13 @@ class ScopeDistinctParitySensitivityTests(unittest.TestCase):
                     "returned_document_ids_mechanism_off": None,
                 })
         self.old_summary = {"memory_provider": "agent-memory", "mode": "retrieval",
-                            "total_queries": 77, "results": copy.deepcopy(self.cases)}
+                            "total_queries": 77, "ingested_docs": 35, "run_name": "agent-memory-24048d55e26d",
+                            "avg_retrieve_time_ms": 28.1, "results": copy.deepcopy(self.cases)}
+        # A real re-execution differs from v6 only in wall-clock timing and the run name.
         self.new_summary = copy.deepcopy(self.old_summary)
+        self.new_summary.update(run_name="agent-memory-aaaaaaaaaaaa", avg_retrieve_time_ms=31.4)
+        for case in self.new_summary["results"]:
+            case["retrieve_time_ms"] += 3.5
         self.old_identity = {"lane_id": self.module.OLD_LANE_ID,
                              "amb_revision": self.module.HARNESS_SHA}
         self.new_identity = {
@@ -160,8 +166,11 @@ class ScopeDistinctParitySensitivityTests(unittest.TestCase):
                 self.module.ACCEPTED_V6_EVIDENCE_BLOB
                 if path.name == "evidence.json" else blobs["reference/" + path.name]
             ),
-        ):
+        ), mock.patch.object(self.module, "_runtime_tree", side_effect=self.runtime_tree):
             return self.module.verify(self.baseline, self.candidate, root=self.root)
+
+    def runtime_tree(self, root, revision):
+        return self.module.RUNTIME_TREE if revision == "a" * 40 else "f" * 40
 
     def test_tampered_accepted_v6_summary_refuses_even_when_candidate_colludes(self):
         # A forged baseline can no longer be made "equal" to a forged candidate.
@@ -337,6 +346,133 @@ class ScopeDistinctParitySensitivityTests(unittest.TestCase):
         self.write_files()
         with self.assertRaisesRegex(self.module.ParityBlocked, "baseline checker"):
             self.check()
+
+    # Review findings on the successor gate: relabelled v6 bytes, type-loose equality, fields outside
+    # the preregistered list, self-referential lane and runtime anchors, and unguarded identity checks.
+
+    def test_relabelled_v6_summary_bytes_refuse(self):
+        self.new_summary = copy.deepcopy(self.old_summary)
+        self.write_files()
+        with self.assertRaisesRegex(self.module.ParityBlocked, "byte-identical to the accepted v6"):
+            self.check()
+
+    def test_reserialised_v6_summary_with_v6_timings_refuses(self):
+        self.new_summary = copy.deepcopy(self.old_summary)
+        self.new_summary["run_name"] = "agent-memory-aaaaaaaaaaaa"
+        self.write_files()
+        with self.assertRaisesRegex(self.module.ParityBlocked, "timings are identical"):
+            self.check()
+
+    def test_type_change_with_equal_python_value_blocks(self):
+        self.new_summary["results"][3]["correct"] = 1
+        self.write_files()
+        with self.assertRaisesRegex(self.module.ParityBlocked, "case.correct"):
+            self.check()
+
+    def test_field_outside_the_preregistered_list_blocks(self):
+        self.new_summary["results"][5]["gold_answers"] = ["forged"]
+        self.write_files()
+        with self.assertRaisesRegex(self.module.ParityBlocked, "case.gold_answers"):
+            self.check()
+
+    def test_meta_field_outside_the_preregistered_list_blocks(self):
+        self.new_summary["results"][5]["meta"]["retrieval_limit"] = 99
+        self.old_summary["results"][5]["meta"]["retrieval_limit"] = 20
+        self.write_files()
+        with self.assertRaisesRegex(self.module.ParityBlocked, "meta.retrieval_limit"):
+            self.check()
+
+    def test_summary_field_change_blocks(self):
+        self.new_summary["ingested_docs"] = 34
+        self.write_files()
+        with self.assertRaisesRegex(self.module.ParityBlocked, "summary.ingested_docs"):
+            self.check()
+
+    def test_added_case_field_blocks(self):
+        self.new_summary["results"][7]["extra"] = True
+        self.write_files()
+        with self.assertRaisesRegex(self.module.ParityBlocked, "case field set changed"):
+            self.check()
+
+    def test_lane_under_repo_root_must_match_the_constant_digest(self):
+        # The candidate colludes: identity and imported evidence carry the rewritten lane's digest.
+        lane = copy.deepcopy(self.lane)
+        lane["notes"] = "rewritten pins"
+        write_json(self.root / LANE.relative_to(ROOT), lane)
+        self.new_identity["lane_digest_sha256"] = self.module._lane_digest(lane)
+        self.write_files()
+        p = self.candidate / "evidence.json"
+        manifest = json.loads(p.read_text(encoding="utf-8"))
+        manifest["lane_digest_at_execution"] = self.module._lane_digest(lane)
+        write_json(p, manifest)
+        with self.assertRaisesRegex(self.module.ParityBlocked, "differs from the frozen lane digest"):
+            self.check()
+
+    def test_constant_lane_digest_is_the_committed_lane(self):
+        self.assertEqual(self.module._lane_digest(self.lane), self.module.SUCCESSOR_LANE_DIGEST)
+
+    def test_executed_revision_must_carry_the_frozen_runtime_tree(self):
+        self.new_identity["agent_memory_revision"] = "b" * 40
+        self.write_files()
+        with self.assertRaisesRegex(self.module.ParityBlocked, "protected runtime tree"):
+            self.check()
+
+    def test_runtime_tree_lookup_reads_the_real_repository(self):
+        head = self.module.subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True,
+                                          text=True, check=True).stdout.strip()
+        tree = self.module.subprocess.run(["git", "rev-parse", "HEAD:reference/agentmem_ref"], cwd=ROOT,
+                                          capture_output=True, text=True, check=True).stdout.strip()
+        self.assertEqual(self.module._runtime_tree(ROOT, head), tree)
+        self.assertIsNone(self.module._runtime_tree(ROOT, "0" * 40))
+
+    def test_identity_fields_each_block(self):
+        cases = {
+            "memory": ("bm25", "full PrecisionMemBench retrieval control"),
+            "mode": ("answer", "full PrecisionMemBench retrieval control"),
+            "split": ("multi-turn", "full PrecisionMemBench retrieval control"),
+            "amb_revision": ("0" * 40, "external AMB revision changed"),
+            "amb_pmb_return_cap": ("10", "all 77 queries with no return cap"),
+            "query_limit": ("20", "all 77 queries with no return cap"),
+            "declaration_blob": ("0" * 40, "declaration identity mismatch"),
+            "lane_digest_sha256": ("0" * 64, "successor lane digest mismatch"),
+            "answer_model": ("gemini:x", "unexpectedly used a model"),
+        }
+        original = copy.deepcopy(self.new_identity)
+        for field, (value, message) in cases.items():
+            with self.subTest(field=field):
+                self.new_identity = copy.deepcopy(original)
+                self.new_identity[field] = value
+                self.write_files()
+                with self.assertRaisesRegex(self.module.ParityBlocked, message):
+                    self.check()
+
+    def test_query_text_change_blocks(self):
+        self.new_summary["results"][9]["query"] = "Query 9 altered"
+        self.write_files()
+        with self.assertRaises(self.module.ParityBlocked):
+            self.check()
+
+    def test_truncated_candidate_sidecar_blocks(self):
+        self.write_files()
+        (self.candidate / "cross-fact.jsonl").write_text(self._sidecar_content(self.sidecar[:72]), encoding="utf-8")
+        self.write_candidate_evidence()
+        with self.assertRaisesRegex(self.module.ParityBlocked, "73 ordered sidecar records"):
+            self.check()
+
+    def test_candidate_sidecar_summary_must_be_consistent(self):
+        p = self.candidate / "evidence.json"
+        manifest = json.loads(p.read_text(encoding="utf-8"))
+        manifest["cross_fact_sidecar"]["limited_total"] = 1
+        write_json(p, manifest)
+        with self.assertRaisesRegex(self.module.ParityBlocked, "cross-fact evidence summary"):
+            self.check()
+
+    def test_candidate_source_blob_drift_blocks(self):
+        with mock.patch.object(self.module, "_raw_git_blob", side_effect=lambda path: (
+            self.module.ACCEPTED_V6_EVIDENCE_BLOB if path.name == "evidence.json" else "0" * 40
+        )), mock.patch.object(self.module, "_runtime_tree", side_effect=self.runtime_tree):
+            with self.assertRaisesRegex(self.module.ParityBlocked, "candidate source blob drift"):
+                self.module.verify(self.baseline, self.candidate, root=self.root)
 
 
 if __name__ == "__main__":

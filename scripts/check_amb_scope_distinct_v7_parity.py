@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -51,6 +52,14 @@ SIDECAR_FIELDS = (
     "returned_document_ids_mechanism_off",
 )
 HARNESS_SHA = "03c1d0f1d27da63034f0931121c858faba512383"
+# Constant anchors for the successor freeze: a different lane file under --repo-root cannot
+# redefine the pins, and the executed revision must carry the frozen protected runtime tree.
+SUCCESSOR_LANE_DIGEST = "7ebbe01dbcaf79544c9482b8d408978d8845434f1a2b50d3404aa2b56b321820"
+RUNTIME_TREE = "975b09412b096a9eac4a92478e7d3a39700ba5d9"
+# Every other case, meta and summary field is compared type-strictly. Only wall-clock
+# timing and the run name (which embeds the executed revision) may differ.
+CASE_VOLATILE = frozenset({"retrieve_time_ms"})
+SUMMARY_VOLATILE = frozenset({"run_name", "ingestion_time_ms", "avg_retrieve_time_ms"})
 
 
 class ParityBlocked(RuntimeError):
@@ -79,6 +88,17 @@ def _sha(path: Path) -> str:
 def _lane_digest(lane: dict[str, Any]) -> str:
     raw = (json.dumps(lane, sort_keys=True, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
     return hashlib.sha256(raw).hexdigest()
+
+
+def _canonical(value: Any) -> str:
+    # Type-strict: true, 1 and 1.0 serialise differently, unlike Python ==.
+    return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
+def _runtime_tree(root: Path, revision: str) -> str | None:
+    completed = subprocess.run(["git", "rev-parse", f"{revision}:reference/agentmem_ref"],
+                               cwd=root, capture_output=True, text=True)
+    return completed.stdout.strip() if completed.returncode == 0 else None
 
 
 def _require(condition: bool, message: str) -> None:
@@ -140,6 +160,7 @@ def verify(baseline_dir: Path, candidate_dir: Path, *, root: Path = ROOT) -> dic
     lane = _read_json(root / SUCCESSOR_LANE.relative_to(ROOT))
     _require(lane.get("lane_id") == NEW_LANE_ID and lane.get("status") == "frozen",
              "candidate lane is not the frozen scope-distinct successor")
+    _require(_lane_digest(lane) == SUCCESSOR_LANE_DIGEST, "successor lane differs from the frozen lane digest")
     blobs = lane["harness"]["source_blobs"]
     for source, expected in blobs.items():
         if source.startswith("reference/"):
@@ -209,6 +230,8 @@ def verify(baseline_dir: Path, candidate_dir: Path, *, root: Path = ROOT) -> dic
              and isinstance(after_identity.get("agent_memory_revision"), str)
              and len(after_identity["agent_memory_revision"]) == 40,
              "successor run/revision identity is missing")
+    _require(_runtime_tree(root, after_identity["agent_memory_revision"]) == RUNTIME_TREE,
+             "executed revision does not carry the frozen protected runtime tree")
     _require(after_identity.get("lane_digest_sha256") == _lane_digest(lane),
              "successor lane digest mismatch")
     _require(after_identity.get("bridge_blobs") == {
@@ -223,16 +246,35 @@ def verify(baseline_dir: Path, candidate_dir: Path, *, root: Path = ROOT) -> dic
              and import_workflow["id"] == str(after_identity["workflow_run_id"]),
              "candidate importer and run identity disagree")
 
-    before = _cases(_read_json(baseline_dir / "single-turn.json"), "v6")
-    after = _cases(_read_json(candidate_dir / "single-turn.json"), "successor")
+    # A fresh execution never reproduces the recorded bytes (timing, run name); identical
+    # bytes mean the accepted v6 summary was relabelled, not re-executed.
+    _require(candidate_files["single-turn.json"] != recorded_files.get("single-turn.json"),
+             "candidate summary is byte-identical to the accepted v6 summary")
+    before_summary = _read_json(baseline_dir / "single-turn.json")
+    after_summary = _read_json(candidate_dir / "single-turn.json")
+    before = _cases(before_summary, "v6")
+    after = _cases(after_summary, "successor")
+    # Re-serialising the v6 summary changes its bytes but not its wall-clock measurements.
+    _require(_canonical([before_summary.get(f) for f in sorted(SUMMARY_VOLATILE - {"run_name"})]
+                        + [case.get("retrieve_time_ms") for case in before])
+             != _canonical([after_summary.get(f) for f in sorted(SUMMARY_VOLATILE - {"run_name"})]
+                           + [case.get("retrieve_time_ms") for case in after]),
+             "candidate timings are identical to the accepted v6 run")
+    _require(set(before_summary) == set(after_summary), "summary field set changed")
+    for field in sorted(set(before_summary) - SUMMARY_VOLATILE - {"results"}):
+        _require(_canonical(before_summary[field]) == _canonical(after_summary[field]),
+                 f"summary.{field} not equal")
     _require([row["query_id"] for row in before] == [row["query_id"] for row in after],
              "query ID order/selection changed")
     for old, new in zip(before, after):
         _require(old["query"] == new["query"], f"{old['query_id']}: query text changed")
-        for field in CASE_FIELDS:
-            _require(old[field] == new[field], f"{old['query_id']}: case.{field} not equal")
-        for field in META_FIELDS:
-            _require(old["meta"][field] == new["meta"][field],
+        _require(set(old) == set(new) and set(old["meta"]) == set(new["meta"]),
+                 f"{old['query_id']}: case field set changed")
+        rest = sorted(set(old) - set(CASE_FIELDS) - CASE_VOLATILE - {"meta"})
+        for field in (*CASE_FIELDS, *rest):
+            _require(_canonical(old[field]) == _canonical(new[field]), f"{old['query_id']}: case.{field} not equal")
+        for field in (*META_FIELDS, *sorted(set(old["meta"]) - set(META_FIELDS))):
+            _require(_canonical(old["meta"][field]) == _canonical(new["meta"][field]),
                      f"{old['query_id']}: meta.{field} not equal")
 
     before_sidecar = baseline_dir / "cross-fact.jsonl"
@@ -243,7 +285,7 @@ def verify(baseline_dir: Path, candidate_dir: Path, *, root: Path = ROOT) -> dic
     old_records = _sidecar(before_sidecar, before, "v6")
     new_records = _sidecar(after_sidecar, after, "successor")
     for old, new in zip(old_records, new_records):
-        _require(old == new, f"cross-fact sidecar differs at call_index {old['call_index']}")
+        _require(_canonical(old) == _canonical(new), f"cross-fact sidecar differs at call_index {old['call_index']}")
     _require(all(item["limited_count"] == 0 for item in new_records),
              "scope-distinct control introduced cross-fact limitations")
     return {
