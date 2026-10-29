@@ -171,6 +171,45 @@ class ImportAmbLaneEvidenceTests(unittest.TestCase):
             self.assertEqual(list(dest.iterdir()), [])
             self.assertEqual([p.name for p in dest.parent.iterdir()], [dest.name])
 
+    def test_atomic_publisher_refuses_raced_empty_destination(self):
+        # Linux Path.rename replaces an empty directory. The no-replace
+        # primitive must refuse even after a successful preflight check.
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            stage, target = root / "stage", root / "imported"
+            stage.mkdir()
+            (stage / "evidence.json").write_text("verified", encoding="utf-8")
+            self.assertFalse(target.exists())
+            target.mkdir()  # Uncooperative writer wins the final-check race.
+            with self.assertRaisesRegex(self.module.ImportError_, "already exists"):
+                self.module.publish_directory_no_replace(stage, target)
+            self.assertEqual(list(target.iterdir()), [], "racer-owned directory replaced")
+            self.assertEqual((stage / "evidence.json").read_text(encoding="utf-8"), "verified")
+
+    def test_atomic_publisher_succeeds_on_absent_destination(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            stage, target = root / "stage", root / "imported"
+            stage.mkdir()
+            (stage / "evidence.json").write_text("verified", encoding="utf-8")
+            self.module.publish_directory_no_replace(stage, target)
+            self.assertFalse(stage.exists())
+            self.assertEqual((target / "evidence.json").read_text(encoding="utf-8"), "verified")
+
+    def test_atomic_publisher_refuses_raced_symlink_target(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            stage, target, victim = root / "stage", root / "imported", root / "victim"
+            stage.mkdir()
+            victim.mkdir()
+            (victim / "sentinel").write_text("do not touch", encoding="utf-8")
+            (stage / "evidence.json").write_text("verified", encoding="utf-8")
+            target.symlink_to(victim, target_is_directory=True)
+            with self.assertRaisesRegex(self.module.ImportError_, "already exists"):
+                self.module.publish_directory_no_replace(stage, target)
+            self.assertEqual((victim / "sentinel").read_text(encoding="utf-8"), "do not touch")
+            self.assertTrue(stage.exists())
+
     def test_unresolved_claim_refuses_instead_of_racing_or_replacing_evidence(self):
         with tempfile.TemporaryDirectory() as temporary:
             runs = Path(temporary) / "runs"
