@@ -22,6 +22,9 @@ SUCCESSOR_LANE = (
     ROOT / "reports/validation/v7-integration/amb-scope-distinct-successor/"
     "amb-precisionmembench-retrieval-v7-scope-distinct-v1.json"
 )
+# Immutable committed acceptance anchor, independent of any rewritable JSON digest map.
+# The accepted v6 evidence cannot be replaced with a colluding candidate copy.
+ACCEPTED_V6_EVIDENCE_BLOB = "35473565cbc40a7340eee12bfd6c959e4f32f12b"
 OLD_LANE_ID = "amb-precisionmembench-retrieval-v6"
 NEW_LANE_ID = "amb-precisionmembench-retrieval-v7-scope-distinct-v1"
 CASE_FIELDS = ("correct", "context")
@@ -142,12 +145,20 @@ def verify(baseline_dir: Path, candidate_dir: Path, *, root: Path = ROOT) -> dic
         if source.startswith("reference/"):
             _require(_raw_git_blob(root / source) == expected, f"candidate source blob drift: {source}")
 
-    before_evidence = _read_json(baseline_dir / "evidence.json")
+    accepted_record = baseline_dir / "evidence.json"
+    _require(_raw_git_blob(accepted_record) == ACCEPTED_V6_EVIDENCE_BLOB,
+             "accepted-v6 evidence blob differs from the frozen commit")
+    before_evidence = _read_json(accepted_record)
     _require(before_evidence.get("lane_id") == OLD_LANE_ID,
              "baseline is not the accepted v6 control evidence")
     _require(before_evidence.get("authority_effect") == "none", "baseline evidence authority mismatch")
     before_identity = _read_json(baseline_dir / "execution-identity.json")
     after_identity = _read_json(candidate_dir / "execution-identity.json")
+    recorded_files = before_evidence.get("files")
+    _require(isinstance(recorded_files, dict), "accepted-v6 file digest map missing")
+    for name in ("single-turn.json", "cross-fact.jsonl", "execution-identity.json"):
+        _require(recorded_files.get(name) == _sha(baseline_dir / name),
+                 f"accepted-v6 {name} differs from the committed evidence digest")
     _require(before_identity.get("lane_id") == OLD_LANE_ID, "v6 execution identity mismatch")
     _require(after_identity.get("lane_id") == NEW_LANE_ID, "successor execution lane mismatch")
     _require(after_identity.get("memory") == "agent-memory"
