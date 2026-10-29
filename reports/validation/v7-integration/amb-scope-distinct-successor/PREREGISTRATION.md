@@ -123,6 +123,32 @@ The new `test_amb_scope_distinct_parity.py` mutation cases are synthetic
 falsifiers and **must** pass as part of the pre-score test suite. They do not
 constitute a run of the external 77-case benchmark.
 
+### Additional comparator and importer gates
+
+The original frozen v7 comparison requires that the BM25 baseline stay equal
+to accepted v6. The already-scored scope-distinct successor lane omitted that
+explicit rule; do **not** rewrite the scored lane to correct it. Execute its
+separate immutable acceptance check on imported BM25 evidence:
+
+```sh
+python3.12 scripts/check_amb_scope_distinct_v7_bm25.py \
+  --candidate-dir reports/benchmarks/amb/amb-precisionmembench-retrieval-v7-scope-distinct-v1/bm25-2f4b8a1b103b
+```
+
+This checks exact type-sensitive 77-case BM25 parity, excluding only the
+documented run name and measured wall-clock timing fields. It binds the v6
+evidence blob, frozen successor lane/runner, importer evidence and execution
+tree. An EQUAL result still has `acceptance: not_granted`; hosted provenance
+and independent review remain mandatory.
+
+Imports now publish from private staging and reject an existing target for the
+same `<lane>/<provider>-<revision12>`. Never erase or overwrite a scored
+import to make a second run fit. For a requalification use an independently
+identified execution revision or a separate uncommitted output root, and review
+which evidence (if any) should later be retained. A stranded
+`.<provider-revision>.import-claim` is a fail-closed interruption signal,
+not an invitation to auto-remove a lock or proceed on partial data.
+
 ## Qualification limits
 
 No executable benchmark, SQLite integration or Python suite has yet been run
