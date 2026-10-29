@@ -1,0 +1,3 @@
+agent-memory: strict case equality 77/77; summary diffs []; correct 15/77 prec 0.1806 rec 0.9535; differing {}
+bm25: strict case equality 77/77; summary diffs []; correct 8/77 prec 0.0536 rec 0.9651; differing {}
+mem0-explicit: strict case equality 77/77; summary diffs []; correct 10/77 prec 0.1049 rec 1.0; differing {}

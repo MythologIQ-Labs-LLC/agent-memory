@@ -1,0 +1,1 @@
+{"acceptance": "not_granted", "authority_effect": "none", "baseline_lane": "amb-precisionmembench-retrieval-v6", "candidate_lane": "amb-precisionmembench-retrieval-v7-scope-distinct-v1", "cases_equal": 77, "cross_fact_records_equal": 73, "limited_count": 0, "no_recall_cases": 4, "verdict": "EQUAL"}
