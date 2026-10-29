@@ -103,6 +103,13 @@ python3.12 scripts/check_amb_scope_distinct_v7_parity.py \
 ```
 
 The candidate evidence path above is a **placeholder**, not a committed artifact.
+Run the official `scripts/import_amb_lane_evidence.py` importer first and
+point `--candidate-dir` to its imported output directory. A raw workflow artifact
+directory without `evidence.json` must fail. The verifier pins the exact
+Git blob of the accepted-v6 evidence record (`35473565cbc40a7340eee12bfd6c959e4f32f12b`),
+rechecks the summary, identity and sidecar SHA-256 digests on both sides, and
+requires a correctly bound imported Agent Memory control row and workflow run.
+Synthetic matching JSON never counts as accepted evidence.
 The script requires exactly 77 original query IDs in order, nine meta fields and
 both case fields equal to v6, all 73 joined sidecar records *identical* to v6
 (including scopes, ordered document IDs, refusal counts, returned IDs and
