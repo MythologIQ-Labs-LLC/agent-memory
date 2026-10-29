@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -33,7 +34,7 @@ def compare_strict(a: object, b: object, path: str = "summary") -> None:
         raise control.ParityBlocked(f"{path}: type changed")
     if isinstance(a, dict):
         ignore = (SUMMARY_VOLATILE if path == "summary" else
-                  CASE_VOLATILE if path.startswith("summary.results[") and path.endswith("]") else
+                  CASE_VOLATILE if re.fullmatch(r"summary\.results\[\d+\]", path) else
                   frozenset())
         old = {k for k in a if k not in ignore}
         new = {k for k in b if k not in ignore}
