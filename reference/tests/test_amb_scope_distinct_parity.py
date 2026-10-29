@@ -123,6 +123,28 @@ class ScopeDistinctParitySensitivityTests(unittest.TestCase):
                    {"lane_id": self.module.OLD_LANE_ID, "authority_effect": "none",
                     "files": files,
                     "cross_fact_sidecar": {"sha256": files["cross-fact.jsonl"]}})
+        self.write_candidate_evidence()
+
+    def write_candidate_evidence(self):
+        files = {
+            name: hashlib.sha256((self.candidate / name).read_bytes()).hexdigest()
+            for name in ("single-turn.json", "cross-fact.jsonl", "execution-identity.json")
+        }
+        write_json(self.candidate / "evidence.json", {
+            "lane_id": self.module.NEW_LANE_ID,
+            "authority_effect": "none",
+            "row": {"row_id": "agent-memory-public-facade", "provider_key": "agent-memory"},
+            "lane_digest_at_execution": self.module._lane_digest(self.lane),
+            "files": files,
+            "cross_fact_sidecar": {
+                "sha256": files["cross-fact.jsonl"],
+                "records": 73,
+                "limited_total": 0,
+                "no_recall_executed_cases": 4,
+            },
+            "workflow_run": {"id": "12345"},
+            "execution": {"lane_id": self.module.NEW_LANE_ID},
+        })
 
     @staticmethod
     def _sidecar_content(rows):
@@ -203,6 +225,7 @@ class ScopeDistinctParitySensitivityTests(unittest.TestCase):
         (self.candidate / "cross-fact.jsonl").write_text(
             self._sidecar_content(changed), encoding="utf-8"
         )
+        self.write_candidate_evidence()
         with self.assertRaisesRegex(self.module.ParityBlocked, "sidecar differs"):
             self.check()
 
@@ -213,6 +236,7 @@ class ScopeDistinctParitySensitivityTests(unittest.TestCase):
         (self.candidate / "cross-fact.jsonl").write_text(
             self._sidecar_content(changed), encoding="utf-8"
         )
+        self.write_candidate_evidence()
         with self.assertRaisesRegex(self.module.ParityBlocked, "sidecar differs"):
             self.check()
 
@@ -239,7 +263,7 @@ class ScopeDistinctParitySensitivityTests(unittest.TestCase):
     def test_old_baseline_sidecar_digest_tamper_blocks(self):
         self.write_files()
         (self.baseline / "cross-fact.jsonl").write_text("{}", encoding="utf-8")
-        with self.assertRaisesRegex(self.module.ParityBlocked, "no longer matches"):
+        with self.assertRaisesRegex(self.module.ParityBlocked, "cross-fact.jsonl differs"):
             self.check()
 
     def test_missing_query_refuses_partial_selection(self):
@@ -247,6 +271,39 @@ class ScopeDistinctParitySensitivityTests(unittest.TestCase):
         self.new_summary["total_queries"] = 76
         self.write_files()
         with self.assertRaisesRegex(self.module.ParityBlocked, "exactly 77"):
+            self.check()
+
+    def test_missing_candidate_imported_evidence_refuses(self):
+        (self.candidate / "evidence.json").unlink()
+        with self.assertRaisesRegex(self.module.ParityBlocked, "required JSON unavailable"):
+            self.check()
+
+    def test_candidate_summary_tamper_after_import_refuses(self):
+        (self.candidate / "single-turn.json").write_text("{}", encoding="utf-8")
+        with self.assertRaisesRegex(self.module.ParityBlocked, "candidate single-turn.json differs"):
+            self.check()
+
+    def test_candidate_sidecar_tamper_after_import_refuses(self):
+        (self.candidate / "cross-fact.jsonl").write_text("{}", encoding="utf-8")
+        with self.assertRaisesRegex(self.module.ParityBlocked, "candidate cross-fact.jsonl differs"):
+            self.check()
+
+    def test_candidate_control_evidence_relabel_refuses(self):
+        p = self.candidate / "evidence.json"
+        manifest = json.loads(p.read_text(encoding="utf-8"))
+        manifest["row"]["row_id"] = "bm25-harness-baseline"
+        write_json(p, manifest)
+        with self.assertRaisesRegex(self.module.ParityBlocked, "no imported Agent Memory control evidence"):
+            self.check()
+
+    def test_candidate_manifest_recomputed_but_different_sidecar_refuses(self):
+        changed = copy.deepcopy(self.sidecar)
+        changed[12]["returned_document_ids"] = ["other-user-document"]
+        (self.candidate / "cross-fact.jsonl").write_text(
+            self._sidecar_content(changed), encoding="utf-8"
+        )
+        self.write_candidate_evidence()
+        with self.assertRaisesRegex(self.module.ParityBlocked, "sidecar differs"):
             self.check()
 
     def test_no_hosted_baseline_state_refuses(self):
