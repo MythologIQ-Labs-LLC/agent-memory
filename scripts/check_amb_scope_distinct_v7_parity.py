@@ -168,6 +168,12 @@ def verify(baseline_dir: Path, candidate_dir: Path, *, root: Path = ROOT) -> dic
         next(item for item in lane["systems"] if item["role"] == "control")
         ["configuration"]["runtime_baseline_posture"]["declaration_blob"]
     ), "successor declaration identity mismatch")
+    _require(after_identity.get("runtime_baseline_state") in ("PASS", "TRANSITION"),
+             "successor runtime baseline checker did not permit this declared transition")
+    _require(after_identity.get("workflow_run_id") is not None
+             and isinstance(after_identity.get("agent_memory_revision"), str)
+             and len(after_identity["agent_memory_revision"]) == 40,
+             "successor run/revision identity is missing")
     _require(after_identity.get("lane_digest_sha256") == _lane_digest(lane),
              "successor lane digest mismatch")
     _require(after_identity.get("bridge_blobs") == {
