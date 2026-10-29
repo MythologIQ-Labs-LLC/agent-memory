@@ -112,17 +112,17 @@ class ScopeDistinctParitySensitivityTests(unittest.TestCase):
         write_json(self.candidate / "single-turn.json", self.new_summary)
         write_json(self.baseline / "execution-identity.json", self.old_identity)
         write_json(self.candidate / "execution-identity.json", self.new_identity)
+        sidecar = self._sidecar_content(self.sidecar)
+        (self.baseline / "cross-fact.jsonl").write_text(sidecar, encoding="utf-8")
+        (self.candidate / "cross-fact.jsonl").write_text(sidecar, encoding="utf-8")
+        files = {
+            name: hashlib.sha256((self.baseline / name).read_bytes()).hexdigest()
+            for name in ("single-turn.json", "cross-fact.jsonl", "execution-identity.json")
+        }
         write_json(self.baseline / "evidence.json",
                    {"lane_id": self.module.OLD_LANE_ID, "authority_effect": "none",
-                    "cross_fact_sidecar": {"sha256": hashlib.sha256(
-                        self._sidecar_content(self.sidecar).encode("utf-8")
-                    ).hexdigest()}})
-        (self.baseline / "cross-fact.jsonl").write_text(
-            self._sidecar_content(self.sidecar), encoding="utf-8"
-        )
-        (self.candidate / "cross-fact.jsonl").write_text(
-            self._sidecar_content(self.sidecar), encoding="utf-8"
-        )
+                    "files": files,
+                    "cross_fact_sidecar": {"sha256": files["cross-fact.jsonl"]}})
 
     @staticmethod
     def _sidecar_content(rows):
@@ -134,9 +134,47 @@ class ScopeDistinctParitySensitivityTests(unittest.TestCase):
         blobs = self.lane["harness"]["source_blobs"]
         with mock.patch.object(
             self.module, "_raw_git_blob",
-            side_effect=lambda path: blobs["reference/" + path.name],
+            side_effect=lambda path: (
+                self.module.ACCEPTED_V6_EVIDENCE_BLOB
+                if path.name == "evidence.json" else blobs["reference/" + path.name]
+            ),
         ):
             return self.module.verify(self.baseline, self.candidate, root=self.root)
+
+    def test_tampered_accepted_v6_summary_refuses_even_when_candidate_colludes(self):
+        # A forged baseline can no longer be made "equal" to a forged candidate.
+        self.old_summary["results"][42]["context"] += " forged"
+        self.new_summary["results"][42]["context"] += " forged"
+        self.write_files()
+        with mock.patch.object(self.module, "_raw_git_blob", side_effect=lambda path: (
+            "0" * 40 if path.name == "evidence.json"
+            else self.lane["harness"]["source_blobs"]["reference/" + path.name]
+        )):
+            with self.assertRaisesRegex(self.module.ParityBlocked, "evidence blob differs"):
+                self.module.verify(self.baseline, self.candidate, root=self.root)
+
+    def test_accepted_v6_summary_digest_refuses(self):
+        self.write_files()
+        with (self.baseline / "single-turn.json").open("ab") as stream:
+            stream.write(b" ")
+        with self.assertRaisesRegex(self.module.ParityBlocked, "single-turn.json differs"):
+            self.check()
+
+    def test_accepted_v6_identity_digest_refuses(self):
+        self.write_files()
+        with (self.baseline / "execution-identity.json").open("ab") as stream:
+            stream.write(b" ")
+        with self.assertRaisesRegex(self.module.ParityBlocked, "execution-identity.json differs"):
+            self.check()
+
+    def test_accepted_v6_evidence_pin_is_mandatory(self):
+        self.write_files()
+        blobs = self.lane["harness"]["source_blobs"]
+        with mock.patch.object(self.module, "_raw_git_blob", side_effect=lambda path: (
+            "0" * 40 if path.name == "evidence.json" else blobs["reference/" + path.name]
+        )):
+            with self.assertRaisesRegex(self.module.ParityBlocked, "evidence blob differs"):
+                self.module.verify(self.baseline, self.candidate, root=self.root)
 
     def test_all_77_cases_and_73_sidecar_records_must_match(self):
         report = self.check()
