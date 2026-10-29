@@ -21,9 +21,10 @@ ROOT = SCRIPTS.parent
 BASELINE = ROOT / "reports/benchmarks/amb/amb-precisionmembench-retrieval-v6/bm25-24048d55e26d"
 BASELINE_EVIDENCE_BLOB = "3ad46579237f683526fab9eabc622790ed3ff67d"
 BM25_ROW = "bm25-harness-baseline"
-TIMING_FIELDS = frozenset({"retrieve_time_ms", "avg_retrieve_time_ms", "ingestion_time_ms"})
-# The external harness constructs a different run_name at every revision.
-IGNORED_FIELDS = TIMING_FIELDS | {"run_name"}
+# Only these exact fields at their documented positions are non-authoritative.
+# A similarly named nested field is not silently ignored.
+SUMMARY_VOLATILE = frozenset({"run_name", "avg_retrieve_time_ms", "ingestion_time_ms"})
+CASE_VOLATILE = frozenset({"retrieve_time_ms"})
 
 
 def compare_strict(a: object, b: object, path: str = "summary") -> None:
@@ -31,8 +32,11 @@ def compare_strict(a: object, b: object, path: str = "summary") -> None:
     if type(a) is not type(b):
         raise control.ParityBlocked(f"{path}: type changed")
     if isinstance(a, dict):
-        old = {k for k in a if k not in IGNORED_FIELDS}
-        new = {k for k in b if k not in IGNORED_FIELDS}
+        ignore = (SUMMARY_VOLATILE if path == "summary" else
+                  CASE_VOLATILE if path.startswith("summary.results[") and path.endswith("]") else
+                  frozenset())
+        old = {k for k in a if k not in ignore}
+        new = {k for k in b if k not in ignore}
         if old != new:
             raise control.ParityBlocked(f"{path}: keys changed")
         for name in sorted(old):
@@ -119,7 +123,8 @@ def verify(baseline_dir: Path, candidate_dir: Path, *, root: Path = ROOT) -> dic
                      and len(old.get("results", [])) == len(new.get("results", [])) == 77,
                      "BM25 77-case control is incomplete")
     compare_strict(old, new)
-    control._require(any(old.get(field) != new.get(field) for field in TIMING_FIELDS),
+    control._require(any(old.get(field) != new.get(field) for field in SUMMARY_VOLATILE
+                         if field != "run_name"),
                      "BM25 successor timings are identical to v6; check genuine re-execution")
     return {
         "verdict": "EQUAL", "authority_effect": "none",
