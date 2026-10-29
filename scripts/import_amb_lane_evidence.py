@@ -30,6 +30,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import urllib.request
 from collections import Counter
 from pathlib import Path
@@ -370,124 +371,154 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
         raise ImportError_(f"expected exactly one EvalSummary in {artifact_dir}, found {len(summaries)}")
     summary_path = summaries[0]
 
-    destination = output_root / lane["lane_id"] / f"{identity['memory']}-{revision[:12]}"
-    destination.mkdir(parents=True, exist_ok=True)
-    files: dict[str, str] = {}
-    for name in COPIED_FILES:
-        source = artifact_dir / name
-        if not source.is_file():
-            raise ImportError_(f"artifact {artifact_dir} lacks {name}")
-        shutil.copyfile(source, destination / name)
-        files[name] = sha256_of(destination / name)
-    shutil.copyfile(summary_path, destination / "single-turn.json")
-    files["single-turn.json"] = sha256_of(destination / "single-turn.json")
+    final_destination = output_root / lane["lane_id"] / f"{identity['memory']}-{revision[:12]}"
+    parent = final_destination.parent
+    parent.mkdir(parents=True, exist_ok=True)
+    if final_destination.exists() or final_destination.is_symlink():
+        raise ImportError_(f"import destination already exists; evidence is immutable: {final_destination}")
 
-    # Re-verify every copied byte against the run's own inventory. sha256.txt lists
-    # itself only implicitly, so it is checked by presence and files.txt by digest.
-    summary_rel = str(summary_path.relative_to(artifact_dir))
-    expected = {name: inventory.get(name) for name in COPIED_FILES if name != "sha256.txt"}
-    expected["single-turn.json"] = inventory.get(summary_rel)
-    for name, digest in expected.items():
-        if digest is None:
-            raise ImportError_(f"run inventory does not list {name}")
-        if digest != files[name]:
-            raise ImportError_(f"{name}: copied digest {files[name]} != inventory {digest}")
+    # Atomic cross-process claim: only one importer can publish a row/revision.
+    # A stranded claim after interruption refuses future imports until examined.
+    claim = parent / f".{final_destination.name}.import-claim"
+    try:
+        claim.mkdir()
+    except FileExistsError as exc:
+        raise ImportError_(f"import destination already claimed: {final_destination}") from exc
+    try:
+        if final_destination.exists() or final_destination.is_symlink():
+            raise ImportError_(f"import destination already exists; evidence is immutable: {final_destination}")
+        stage = Path(tempfile.mkdtemp(prefix=f".{final_destination.name}.stage-", dir=parent))
+        try:
+            destination = stage
+            files: dict[str, str] = {}
+            for name in COPIED_FILES:
+                source = artifact_dir / name
+                if not source.is_file():
+                    raise ImportError_(f"artifact {artifact_dir} lacks {name}")
+                shutil.copyfile(source, destination / name)
+                files[name] = sha256_of(destination / name)
+            shutil.copyfile(summary_path, destination / "single-turn.json")
+            files["single-turn.json"] = sha256_of(destination / "single-turn.json")
 
-    summary = json.loads((destination / "single-turn.json").read_text(encoding="utf-8"))
-    sidecar_source = artifact_dir / SIDECAR_NAME
-    recall_control_sidecar = None
-    if row_recall_control(row) == "shadow":
-        if not sidecar_source.is_file():
-            raise ImportError_(f"shadow row {row['row_id']} artifact lacks {SIDECAR_NAME}")
-        shutil.copyfile(sidecar_source, destination / SIDECAR_NAME)
-        files[SIDECAR_NAME] = sha256_of(destination / SIDECAR_NAME)
-        if inventory.get(SIDECAR_NAME) != files[SIDECAR_NAME]:
-            raise ImportError_(f"{SIDECAR_NAME}: copied digest {files[SIDECAR_NAME]} != inventory {inventory.get(SIDECAR_NAME)}")
-        joined = join_recall_control_sidecar(
-            (destination / SIDECAR_NAME).read_text(encoding="utf-8").splitlines(), summary.get("results") or []
-        )
-        recall_control_sidecar = {"file": SIDECAR_NAME, "sha256": files[SIDECAR_NAME], **joined}
-    elif sidecar_source.exists():
-        raise ImportError_(f"row {row['row_id']} runs recall_control off but the artifact carries {SIDECAR_NAME}")
-    cross_fact_source = artifact_dir / CROSS_FACT_SIDECAR_NAME
-    cross_fact_sidecar = None
-    if requires_cross_fact_sidecar(lane, row):
-        if not cross_fact_source.is_file():
-            raise ImportError_(f"row {row['row_id']} of {lane['lane_id']} artifact lacks {CROSS_FACT_SIDECAR_NAME}")
-        shutil.copyfile(cross_fact_source, destination / CROSS_FACT_SIDECAR_NAME)
-        files[CROSS_FACT_SIDECAR_NAME] = sha256_of(destination / CROSS_FACT_SIDECAR_NAME)
-        if inventory.get(CROSS_FACT_SIDECAR_NAME) != files[CROSS_FACT_SIDECAR_NAME]:
-            raise ImportError_(
-                f"{CROSS_FACT_SIDECAR_NAME}: copied digest {files[CROSS_FACT_SIDECAR_NAME]} != inventory {inventory.get(CROSS_FACT_SIDECAR_NAME)}"
-            )
-        joined = join_cross_fact_sidecar(
-            (destination / CROSS_FACT_SIDECAR_NAME).read_text(encoding="utf-8").splitlines(), summary.get("results") or []
-        )
-        cross_fact_sidecar = {"file": CROSS_FACT_SIDECAR_NAME, "sha256": files[CROSS_FACT_SIDECAR_NAME], **joined}
-    elif cross_fact_source.exists():
-        raise ImportError_(f"row {row['row_id']} of {lane['lane_id']} does not declare {CROSS_FACT_SIDECAR_NAME} but the artifact carries it")
-    if summary.get("memory_provider") != identity["memory"] or summary.get("mode") != "retrieval":
-        raise ImportError_("EvalSummary provider/mode do not match the execution identity")
-    if summary.get("total_queries") != lane["dataset"]["query_count"]:
-        raise ImportError_(f"EvalSummary total_queries {summary.get('total_queries')} != lane query_count {lane['dataset']['query_count']}")
+            # Re-verify every copied byte against the run's own inventory. sha256.txt lists
+            # itself only implicitly, so it is checked by presence and files.txt by digest.
+            summary_rel = str(summary_path.relative_to(artifact_dir))
+            expected = {name: inventory.get(name) for name in COPIED_FILES if name != "sha256.txt"}
+            expected["single-turn.json"] = inventory.get(summary_rel)
+            for name, digest in expected.items():
+                if digest is None:
+                    raise ImportError_(f"run inventory does not list {name}")
+                if digest != files[name]:
+                    raise ImportError_(f"{name}: copied digest {files[name]} != inventory {digest}")
 
-    if row["source"]["kind"] == "repository_runtime":
-        system_revision = revision
-    else:
-        system_revision = row["source"]["revision"]
-    integration = get_integration(lane["benchmark_integration"])
-    corpus_classes = integration["input_contract"]["corpus_classes"]
-    if len(corpus_classes) != 1:
-        raise ImportError_(f"integration {lane['benchmark_integration']} declares {len(corpus_classes)} corpus classes; the evidence record needs exactly one")
-    fixture_digests = verify_fixtures(lane) if fetch else {f["name"]: f["sha256"] for f in lane["dataset"]["fixtures"]}
+            summary = json.loads((destination / "single-turn.json").read_text(encoding="utf-8"))
+            sidecar_source = artifact_dir / SIDECAR_NAME
+            recall_control_sidecar = None
+            if row_recall_control(row) == "shadow":
+                if not sidecar_source.is_file():
+                    raise ImportError_(f"shadow row {row['row_id']} artifact lacks {SIDECAR_NAME}")
+                shutil.copyfile(sidecar_source, destination / SIDECAR_NAME)
+                files[SIDECAR_NAME] = sha256_of(destination / SIDECAR_NAME)
+                if inventory.get(SIDECAR_NAME) != files[SIDECAR_NAME]:
+                    raise ImportError_(f"{SIDECAR_NAME}: copied digest {files[SIDECAR_NAME]} != inventory {inventory.get(SIDECAR_NAME)}")
+                joined = join_recall_control_sidecar(
+                    (destination / SIDECAR_NAME).read_text(encoding="utf-8").splitlines(), summary.get("results") or []
+                )
+                recall_control_sidecar = {"file": SIDECAR_NAME, "sha256": files[SIDECAR_NAME], **joined}
+            elif sidecar_source.exists():
+                raise ImportError_(f"row {row['row_id']} runs recall_control off but the artifact carries {SIDECAR_NAME}")
+            cross_fact_source = artifact_dir / CROSS_FACT_SIDECAR_NAME
+            cross_fact_sidecar = None
+            if requires_cross_fact_sidecar(lane, row):
+                if not cross_fact_source.is_file():
+                    raise ImportError_(f"row {row['row_id']} of {lane['lane_id']} artifact lacks {CROSS_FACT_SIDECAR_NAME}")
+                shutil.copyfile(cross_fact_source, destination / CROSS_FACT_SIDECAR_NAME)
+                files[CROSS_FACT_SIDECAR_NAME] = sha256_of(destination / CROSS_FACT_SIDECAR_NAME)
+                if inventory.get(CROSS_FACT_SIDECAR_NAME) != files[CROSS_FACT_SIDECAR_NAME]:
+                    raise ImportError_(
+                        f"{CROSS_FACT_SIDECAR_NAME}: copied digest {files[CROSS_FACT_SIDECAR_NAME]} != inventory {inventory.get(CROSS_FACT_SIDECAR_NAME)}"
+                    )
+                joined = join_cross_fact_sidecar(
+                    (destination / CROSS_FACT_SIDECAR_NAME).read_text(encoding="utf-8").splitlines(), summary.get("results") or []
+                )
+                cross_fact_sidecar = {"file": CROSS_FACT_SIDECAR_NAME, "sha256": files[CROSS_FACT_SIDECAR_NAME], **joined}
+            elif cross_fact_source.exists():
+                raise ImportError_(f"row {row['row_id']} of {lane['lane_id']} does not declare {CROSS_FACT_SIDECAR_NAME} but the artifact carries it")
+            if summary.get("memory_provider") != identity["memory"] or summary.get("mode") != "retrieval":
+                raise ImportError_("EvalSummary provider/mode do not match the execution identity")
+            if summary.get("total_queries") != lane["dataset"]["query_count"]:
+                raise ImportError_(f"EvalSummary total_queries {summary.get('total_queries')} != lane query_count {lane['dataset']['query_count']}")
 
-    record = {
-        "contract_family": CONTRACT_FAMILY,
-        "contract_version": CONTRACT_VERSION,
-        "evidence_class": "same_harness_external_candidate",
-        "lane_id": lane["lane_id"],
-        "lane_file": lane_file,
-        "lane_digest_at_execution": lane_digest(lane),
-        "row": {
-            "row_id": row["row_id"],
-            "system_id": row["system_id"],
-            "display_name": row["display_name"],
-            "role": row["role"],
-            "provider_key": row["provider_key"],
-            "inference_posture": row.get("inference_posture"),
-        },
-        "system": {
-            "id": row["system_id"],
-            "revision": system_revision,
-            "revision_rule": row["source"]["revision_rule"],
-            "source_kind": row["source"]["kind"],
-            "resolved_packages": identity.get("resolved_packages"),
-            "mem0_optional_components": identity.get("mem0_optional_components"),
-            "runtime_baseline": runtime_baseline,
-        },
-        "input": {
-            "sha256": lane["dataset"]["input_sha256"],
-            "corpus_class": corpus_classes[0],
-            "dataset_revision": f"{lane['dataset']['upstream']['repository']}@{lane['dataset']['upstream']['revision']}",
-            "fixtures": fixture_digests,
-            "verified_by": "re-hashed from the pinned fixture URLs at import" if fetch else "lane record only (import ran with --no-fetch)",
-            "query_count": lane["dataset"]["query_count"],
-            "selection_id": lane["selection"]["selection_id"],
-        },
-        "execution": identity,
-        "workflow_run": {
-            "id": str(run_id),
-            "url": f"https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/{run_id}",
-            "artifact_directory": artifact_dir.name,
-        },
-        "native_summary": native_summary(summary),
-        "recall_control_sidecar": recall_control_sidecar,
-        "cross_fact_sidecar": cross_fact_sidecar,
-        "files": files,
-        "authority_effect": "none",
-    }
-    (destination / "evidence.json").write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return destination
+            if row["source"]["kind"] == "repository_runtime":
+                system_revision = revision
+            else:
+                system_revision = row["source"]["revision"]
+            integration = get_integration(lane["benchmark_integration"])
+            corpus_classes = integration["input_contract"]["corpus_classes"]
+            if len(corpus_classes) != 1:
+                raise ImportError_(f"integration {lane['benchmark_integration']} declares {len(corpus_classes)} corpus classes; the evidence record needs exactly one")
+            fixture_digests = verify_fixtures(lane) if fetch else {f["name"]: f["sha256"] for f in lane["dataset"]["fixtures"]}
+
+            record = {
+                "contract_family": CONTRACT_FAMILY,
+                "contract_version": CONTRACT_VERSION,
+                "evidence_class": "same_harness_external_candidate",
+                "lane_id": lane["lane_id"],
+                "lane_file": lane_file,
+                "lane_digest_at_execution": lane_digest(lane),
+                "row": {
+                    "row_id": row["row_id"],
+                    "system_id": row["system_id"],
+                    "display_name": row["display_name"],
+                    "role": row["role"],
+                    "provider_key": row["provider_key"],
+                    "inference_posture": row.get("inference_posture"),
+                },
+                "system": {
+                    "id": row["system_id"],
+                    "revision": system_revision,
+                    "revision_rule": row["source"]["revision_rule"],
+                    "source_kind": row["source"]["kind"],
+                    "resolved_packages": identity.get("resolved_packages"),
+                    "mem0_optional_components": identity.get("mem0_optional_components"),
+                    "runtime_baseline": runtime_baseline,
+                },
+                "input": {
+                    "sha256": lane["dataset"]["input_sha256"],
+                    "corpus_class": corpus_classes[0],
+                    "dataset_revision": f"{lane['dataset']['upstream']['repository']}@{lane['dataset']['upstream']['revision']}",
+                    "fixtures": fixture_digests,
+                    "verified_by": "re-hashed from the pinned fixture URLs at import" if fetch else "lane record only (import ran with --no-fetch)",
+                    "query_count": lane["dataset"]["query_count"],
+                    "selection_id": lane["selection"]["selection_id"],
+                },
+                "execution": identity,
+                "workflow_run": {
+                    "id": str(run_id),
+                    "url": f"https://github.com/MythologIQ-Labs-LLC/agent-memory/actions/runs/{run_id}",
+                    "artifact_directory": artifact_dir.name,
+                },
+                "native_summary": native_summary(summary),
+                "recall_control_sidecar": recall_control_sidecar,
+                "cross_fact_sidecar": cross_fact_sidecar,
+                "files": files,
+                "authority_effect": "none",
+            }
+            (destination / "evidence.json").write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+            if final_destination.exists() or final_destination.is_symlink():
+                raise ImportError_(f"import destination already exists; evidence is immutable: {final_destination}")
+            try:
+                # Publish only a fully verified directory. No prior evidence
+                # may be silently overwritten or partially modified.
+                stage.rename(final_destination)
+            except OSError as exc:
+                raise ImportError_(f"cannot publish immutable import {final_destination}: {exc}") from exc
+        finally:
+            shutil.rmtree(stage, ignore_errors=True)
+    finally:
+        claim.rmdir()
+    return final_destination
 
 
 def main(argv: list[str] | None = None) -> int:
