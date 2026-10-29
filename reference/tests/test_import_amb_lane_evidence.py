@@ -171,6 +171,21 @@ class ImportAmbLaneEvidenceTests(unittest.TestCase):
             self.assertEqual(list(dest.iterdir()), [])
             self.assertEqual([p.name for p in dest.parent.iterdir()], [dest.name])
 
+    def test_unresolved_claim_refuses_instead_of_racing_or_replacing_evidence(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            runs = Path(temporary) / "runs"
+            out = Path(temporary) / "out"
+            _write_artifact(runs, "204", "bm25", "a" * 40, results=_results(4))
+            dest = out / "amb-precisionmembench-retrieval-v1" / f"bm25-{'a' * 12}"
+            dest.parent.mkdir(parents=True)
+            claim = dest.parent / f".{dest.name}.import-claim"
+            claim.mkdir()
+            with self.assertRaisesRegex(self.module.ImportError_, "already claimed"):
+                self.module.main(["--runs-dir", str(runs), "--output-root", str(out), "--no-fetch", "--lane-at-head"])
+            self.assertFalse(dest.exists())
+            self.assertTrue(claim.is_dir(), "a foreign claim must not be deleted by a refused importer")
+            self.assertEqual([p.name for p in dest.parent.iterdir()], [claim.name])
+
     def test_late_inventory_failure_cleans_stage_without_publishing_partial_evidence(self):
         with tempfile.TemporaryDirectory() as temporary:
             runs = Path(temporary) / "runs"
