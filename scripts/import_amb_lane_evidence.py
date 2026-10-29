@@ -24,8 +24,11 @@ The record carries ``authority_effect: none``. It never decides acceptance: that
 from __future__ import annotations
 
 import argparse
+import ctypes
+import errno
 import hashlib
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -337,6 +340,43 @@ def find_artifact_dirs(runs_dir: Path) -> list[tuple[str, Path]]:
     return found
 
 
+def publish_directory_no_replace(source: Path, target: Path) -> None:
+    """Atomically publish a verified directory without replacing any target.
+
+    On Linux, plain Path.rename() silently replaces an existing *empty* target
+    directory, even after an existence check. That is not an immutable import.
+    The kernel's RENAME_NOREPLACE is mandatory here; unsupported hosts fail
+    closed instead of falling back to the racy check-then-rename sequence.
+    """
+    if sys.platform == "linux":
+        try:
+            renameat2 = ctypes.CDLL(None, use_errno=True).renameat2
+        except (AttributeError, OSError) as exc:
+            raise ImportError_("atomic no-replace directory publication is unavailable") from exc
+        renameat2.argtypes = (
+            ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint
+        )
+        renameat2.restype = ctypes.c_int
+        # AT_FDCWD=-100; RENAME_NOREPLACE=1 (Linux renameat2).
+        result = renameat2(-100, os.fsencode(source), -100, os.fsencode(target), 1)
+        if result != 0:
+            error = ctypes.get_errno()
+            if error == errno.EEXIST:
+                raise ImportError_(f"import destination already exists; evidence is immutable: {target}")
+            raise ImportError_(f"cannot atomically publish import {target}: errno {error}")
+        return
+    if os.name == "nt":
+        # Windows os.rename refuses any pre-existing destination.
+        try:
+            source.rename(target)
+        except FileExistsError as exc:
+            raise ImportError_(f"import destination already exists; evidence is immutable: {target}") from exc
+        except OSError as exc:
+            raise ImportError_(f"cannot atomically publish import {target}: {exc}") from exc
+        return
+    raise ImportError_("atomic no-replace directory publication is unsupported on this host")
+
+
 def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_root: Path, fetch: bool, lane_at_head: bool) -> Path:
     identity = json.loads((artifact_dir / "execution-identity.json").read_text(encoding="utf-8"))
     if str(identity.get("workflow_run_id")) != str(run_id):
@@ -508,12 +548,9 @@ def import_artifact(run_id: str, artifact_dir: Path, *, repo_root: Path, output_
 
             if final_destination.exists() or final_destination.is_symlink():
                 raise ImportError_(f"import destination already exists; evidence is immutable: {final_destination}")
-            try:
-                # Publish only a fully verified directory. No prior evidence
-                # may be silently overwritten or partially modified.
-                stage.rename(final_destination)
-            except OSError as exc:
-                raise ImportError_(f"cannot publish immutable import {final_destination}: {exc}") from exc
+            # The publication primitive itself refuses replacement, including
+            # a target created between the last check and this operation.
+            publish_directory_no_replace(stage, final_destination)
         finally:
             shutil.rmtree(stage, ignore_errors=True)
     finally:
