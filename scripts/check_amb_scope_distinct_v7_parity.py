@@ -157,10 +157,12 @@ def verify(baseline_dir: Path, candidate_dir: Path, *, root: Path = ROOT) -> dic
     # Compare *imported* evidence, not an unverified raw benchmark directory.
     # This proves the official importer carried each result byte in its inventory.
     candidate_evidence = _read_json(candidate_dir / "evidence.json")
+    candidate_row = candidate_evidence.get("row")
     _require(candidate_evidence.get("lane_id") == NEW_LANE_ID
              and candidate_evidence.get("authority_effect") == "none"
-             and candidate_evidence.get("row", {}).get("row_id") == "agent-memory-public-facade"
-             and candidate_evidence.get("row", {}).get("provider_key") == "agent-memory",
+             and isinstance(candidate_row, dict)
+             and candidate_row.get("row_id") == "agent-memory-public-facade"
+             and candidate_row.get("provider_key") == "agent-memory",
              "candidate has no imported Agent Memory control evidence")
     _require(candidate_evidence.get("lane_digest_at_execution") == _lane_digest(lane),
              "candidate importer recorded a different frozen lane digest")
@@ -212,9 +214,13 @@ def verify(baseline_dir: Path, candidate_dir: Path, *, root: Path = ROOT) -> dic
     _require(after_identity.get("bridge_blobs") == {
         source: blob for source, blob in blobs.items() if source.startswith("reference/")
     }, "successor bridge or runner identity differs from the freeze")
-    _require(candidate_evidence.get("execution", {}).get("lane_id") == NEW_LANE_ID
-             and str(candidate_evidence.get("workflow_run", {}).get("id"))
-                 == str(after_identity["workflow_run_id"]),
+    import_execution = candidate_evidence.get("execution")
+    import_workflow = candidate_evidence.get("workflow_run")
+    _require(isinstance(import_execution, dict)
+             and isinstance(import_workflow, dict)
+             and import_execution.get("lane_id") == NEW_LANE_ID
+             and isinstance(import_workflow.get("id"), str)
+             and import_workflow["id"] == str(after_identity["workflow_run_id"]),
              "candidate importer and run identity disagree")
 
     before = _cases(_read_json(baseline_dir / "single-turn.json"), "v6")
