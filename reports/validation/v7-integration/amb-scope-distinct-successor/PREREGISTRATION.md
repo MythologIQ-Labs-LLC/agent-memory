@@ -85,6 +85,37 @@ sidecar environment and package pins. The exact invocation, input/blob
 verification, 77 raw cases, baseline comparison, stdout/stderr, execution
 identity and integrity checks must be recorded before any import.
 
+### Strict parity verifier (post-artifact recording, pre-acceptance)
+
+The existing `scripts/check_cross_fact_attribution.py` is a historical
+attribution instrument and is **not** sufficient to approve this successor:
+it can label a case `EQUAL` without comparing cross-fact records against
+accepted v6 sidecars, and it permits `ATTRIBUTED` divergence. Neither
+condition qualifies this successor.
+
+Run the separate strict gate after recording an independent candidate control
+artifact in the same `single-turn.json` / `cross-fact.jsonl` /
+`execution-identity.json` layout as the accepted v6 evidence:
+
+```sh
+python3.12 scripts/check_amb_scope_distinct_v7_parity.py \
+  --candidate-dir reports/benchmarks/amb/amb-precisionmembench-retrieval-v7-scope-distinct-v1/agent-memory-<executed-revision12>
+```
+
+The candidate evidence path above is a **placeholder**, not a committed artifact.
+The script requires exactly 77 original query IDs in order, nine meta fields and
+both case fields equal to v6, all 73 joined sidecar records *identical* to v6
+(including scopes, ordered document IDs, refusal counts, returned IDs and
+0-limited postures), no changed source/runner pin, exact lane digest and
+declaration posture, plus the accepted v6 sidecar's committed SHA-256 digest.
+Any mismatch returns `BLOCKED` and nonzero exit. Even `EQUAL` returns
+`acceptance: not_granted`; an independent reviewer and the official evidence
+importer are still required before acceptance or register rebind.
+
+The new `test_amb_scope_distinct_parity.py` mutation cases are synthetic
+falsifiers and **must** pass as part of the pre-score test suite. They do not
+constitute a run of the external 77-case benchmark.
+
 ## Qualification limits
 
 No executable benchmark, SQLite integration or Python suite has yet been run
