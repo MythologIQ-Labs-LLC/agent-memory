@@ -57,6 +57,16 @@ class Bm25SuccessorExactParityTests(unittest.TestCase):
         with self.assertRaisesRegex(self.gate.control.ParityBlocked, "value changed"):
             self.gate.compare_strict({"unlisted_time_ms": 1}, {"unlisted_time_ms": 2})
 
+    def test_volatility_exceptions_are_not_global_wildcards(self):
+        for left, right in (
+            ({"meta": {"run_name": "a"}}, {"meta": {"run_name": "b"}}),
+            ({"meta": {"ingestion_time_ms": 2}}, {"meta": {"ingestion_time_ms": 3}}),
+            ({"results": [{"meta": {"retrieve_time_ms": 1}}]},
+             {"results": [{"meta": {"retrieve_time_ms": 2}}]}),
+        ):
+            with self.subTest(right=right), self.assertRaises(self.gate.control.ParityBlocked):
+                self.gate.compare_strict(left, right)
+
     def test_committed_local_bm25_is_exactly_equal_to_v6_not_accepted(self):
         # This is the existing local imported row, not a live hosted run.
         self.assertTrue(CANDIDATE.is_dir(), "local imported row missing")
